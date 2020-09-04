@@ -1,5 +1,5 @@
-export default class Chart {
-  constructor () {
-    this.id = 'chart'
-  }
+import Chart from './chart'
+
+export {
+  Chart
 }
