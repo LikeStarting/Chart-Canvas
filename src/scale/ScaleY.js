@@ -16,7 +16,7 @@ class ScaleY {
         break
       case 'log':
         if (scaleConfig.logBase < 1) domain = [maxVal, minVal]
-        yScale = this.getScaleMap(scaleConfig, domain, range)
+        yScale = this.getScaleMap(scaleConfig, domain, range, true)
         break
       case 'pow':
         if (scaleConfig.pow < 0) domain = [maxVal, minVal]
@@ -32,7 +32,7 @@ class ScaleY {
     }
   }
 
-  getScaleMap (scaleConfig, domain, range, clamp) {
+  getScaleMap (scaleConfig, domain, range, clamp = false) {
     let transformer = null
     switch (scaleConfig.type) {
       case 'linear':
@@ -57,8 +57,8 @@ class ScaleY {
 
     return (x) => {
       const result = k * x + b
-      if (clamp !== undefined && result > range[1]) return range[1]
-      if (clamp !== undefined && result < range[0]) return range[0]
+      if (clamp && result > range[1]) return range[1]
+      if (clamp && result < range[0]) return range[0]
       return result
     }
   }
