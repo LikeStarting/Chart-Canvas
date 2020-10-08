@@ -1,20 +1,24 @@
 export default class Base {
-  constructor (config, data) {
+  constructor (data, config) {
     this.config = config
     this.data = data
-    this._initCanvas(config)
-    this._drawGrid()
+  }
+
+  get root () {
+    return this.chart.config.root
   }
 
   get xScale () {
     return this.chart.xScale
   }
 
-  _initCanvas (container) {
-    this._canvas = document.createElement('canvas')
-    this._canvas.style.position = 'absolute'
-    this._ctx = this._canvas.getContext('2d')
-    container.appendChild(this._canvas)
+  initCanvas () {
+    this.canvas = document.createElement('canvas')
+    this.canvas.style.position = 'absolute'
+    this.canvas.style.top = this.config.top
+    this.canvas.style.left = this.config.left
+    this.ctx = this.canvas.getContext('2d')
+    this.chart.container.appendChild(this.canvas)
   }
 
   redraw (callback) {

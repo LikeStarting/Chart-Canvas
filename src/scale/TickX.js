@@ -5,10 +5,10 @@ class TickX {
     let timeTicks = []
 
     switch (interval) {
-      case 'd1':
+      case 'D1':
         timeTicks = this.daily(minDate, maxDate, tradeTime, holidays, 1)
         break
-      case 'd2':
+      case 'D2':
         timeTicks = this.daily(minDate, maxDate, tradeTime, holidays, 2)
         break
     }
@@ -18,19 +18,19 @@ class TickX {
 
   daily (minDate, maxDate, tradeTime, holidays, interval) {
     const timeTicks = []
-    const { hour, minte } = timeUtils.getTradeCloseTime(tradeTime)
+    const { hour, minute } = timeUtils.getTradeCloseTime(tradeTime)
     const tmpDate = new Date(
       minDate.getFullYear(),
       minDate.getMonth(),
       minDate.getDate(),
       hour,
-      minte
+      minute
     )
 
     // eslint-disable-next-line no-unmodified-loop-condition
     while (tmpDate <= maxDate) {
       if (timeUtils.isTradingDay(tmpDate, holidays)) {
-        timeTicks.push(tmpDate)
+        timeTicks.push(new Date(tmpDate))
       }
 
       for (let i = 0; i < interval; i++) {

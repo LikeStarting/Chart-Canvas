@@ -4,7 +4,7 @@ class ScaleX {
     const size = domain.length
     const range = rangeRight - rangeLeft
     const scalePoints = domain.map((d, i) => rangeLeft + range / size * i)
-    return (date) => scalePoints[domain.findIndex(d => d === date)]
+    return (date) => scalePoints[domain.findIndex(d => d.valueOf() === date.valueOf())]
   }
 }
 

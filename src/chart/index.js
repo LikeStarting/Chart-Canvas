@@ -1,18 +1,13 @@
-import Data from './data'
-// import ;
+import mix from '../utils/mixins'
 
-export default class Chart {
-  constructor (data, options) {
-    this.data = new Data(data)
-    this.options = options
-    this.id = 'chart'
-  }
+import ChartBase from './Base'
+import Container from './Container'
+import Data from './Data'
+import Scale from './Scale'
 
-  draw () {
-
-  }
-
-  destroy () {
-
-  }
-}
+export default class Chart extends mix(
+  ChartBase,
+  Container,
+  Scale,
+  Data
+) {}

@@ -28,7 +28,9 @@ class ScaleY {
     }
 
     return {
-      yScale
+      yScale,
+      minVal,
+      maxVal
     }
   }
 

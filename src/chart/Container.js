@@ -1,10 +1,6 @@
 export default class Container {
-  constructor () {
-    this._initContainer()
-  }
-
   get container () {
-    return document.getElementById(this.config.selector) || document.getElementsByClassName('this.config.selector')
+    return document.getElementById(this.config.root) || document.getElementsByClassName(this.config.root)[0]
   }
 
   _initContainer () {

@@ -1,9 +1,9 @@
 class TimeUtils {
   getTradeCloseTime (tradeTime) {
-    const { hour, minte } = tradeTime[tradeTime.length - 1][1]
+    const { hour, minute } = tradeTime[tradeTime.length - 1][1]
     return {
       hour,
-      minte
+      minute
     }
   }
 
@@ -15,7 +15,7 @@ class TimeUtils {
       tmpDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
     }
 
-    return holidays.map(Number).some(d => d === tmpDate.getTime())
+    return !holidays.map(Number).some(d => d === tmpDate.getTime())
   }
 }
 

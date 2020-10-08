@@ -2,14 +2,17 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  entry: './src/index.js',
+  entry: {
+    daily: './src/demo/daily.js'
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].bundle.js'
   },
+  mode: 'development',
   devtool: 'cheap-module-eval-source-map',
   devServer: {
-    contentBase: './dist',
+    contentBase: './src/public',
     hot: true
   },
   module: {
@@ -26,7 +29,8 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Chart with Canvas'
+      title: 'daily',
+      chunk: 'daily'
     })
   ]
 }
