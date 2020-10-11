@@ -9,7 +9,7 @@ const widthPrice = 300
 const heightPrice = 300
 const heightVolume = 85
 const heightAxis = 15
-const width = 1000
+const width = 800
 
 const gridXInterval = 'D1'
 const gridXInterval1 = 'D1'
@@ -32,6 +32,9 @@ const holidays = [new Date(2019, 4, 28), new Date(2019, 4, 27), new Date(2019, 1
 
 const body = document.getElementsByTagName('body')[0]
 const div = document.createElement('div')
+div.style.height = '70vh'
+div.style.padding = '0 10%'
+div.style.margeTop = '20px'
 div.className = 'container'
 body.appendChild(div)
 
@@ -62,14 +65,15 @@ const options = {
   components: [
     {
       type: 'grid',
+      id: 'price_grid',
       vertical: {
         interval: gridXInterval
       },
       horizontal: {
-        interval: 30
+        interval: 10,
+        lineColor: 'red'
       },
       position: {
-        width: widthPrice,
         height: heightPrice
       },
       yScale: {
@@ -78,15 +82,16 @@ const options = {
     },
     {
       type: 'grid',
+      id: 'volume_grid',
       vertical: {
         interval: gridXInterval1,
         dashArray: 0
       },
       horizontal: {
-        display: 0
+        display: false
       },
       position: {
-        width: widthPrice,
+        top: heightPrice,
         height: heightPrice
       },
       yScale: {

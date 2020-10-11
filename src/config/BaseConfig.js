@@ -17,8 +17,24 @@ class BaseConfig {
     this.setYScale(options.yScale)
   }
 
+  get id () {
+    return this.options.id
+  }
+
   get type () {
     return this.options.type
+  }
+
+  get coordinate () {
+    const bottom = this.position.height
+    const right = this.position.width
+
+    return {
+      top: this.position.top,
+      bottom,
+      left: this.position.left,
+      right
+    }
   }
 
   setYScale (yScale = {}) {

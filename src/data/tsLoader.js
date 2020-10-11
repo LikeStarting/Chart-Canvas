@@ -65,6 +65,12 @@ class TSLoader {
     this._prices = prices
   }
 
+  setViewPrices (_prices) {
+    const prices = [..._prices]
+
+    this.viewPrices = prices
+  }
+
   calcPriceChg (prices) {
     let previous = null
 

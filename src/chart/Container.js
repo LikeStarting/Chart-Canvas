@@ -4,10 +4,11 @@ export default class Container {
   }
 
   _initContainer () {
-    this._chartContainer = document.createElement('div')
-    this._chartContainer.userSelect = 'none'
-    this._chartContainer.style.position = 'relative'
-    this._chartContainer.style.width = '100%'
-    this.container.appendChild(this._chartContainer)
+    this.chartContainer = document.createElement('div')
+    this.chartContainer.userSelect = 'none'
+    this.chartContainer.style.position = 'relative'
+    this.chartContainer.style.width = '100%'
+    this.chartContainer.style.height = '100%'
+    this.container.appendChild(this.chartContainer)
   }
 }

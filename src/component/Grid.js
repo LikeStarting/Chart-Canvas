@@ -6,7 +6,7 @@ import scaleY from '../scale/ScaleY'
 import prices from '../demo/data/daily'
 
 class Grid extends Base {
-  updateTicks () {
+  updateData () {
     // const d = this.chart.timeSeries
     const d = { prices }
 
@@ -22,8 +22,8 @@ class Grid extends Base {
     const { yScale, minVal, maxVal } = scaleY.createScale(
       this.config.yScale,
       d,
-      this.config.position.top,
-      this.config.position.bottom
+      this.config.coordinate.top,
+      this.config.coordinate.bottom
     )
     this.yScale = yScale
     this.minVal = minVal
@@ -100,14 +100,15 @@ class Grid extends Base {
 
   setLineStyle (ctx, style) {
     ctx.strokeStyle = style.lineColor
-    ctx.lineWidth = style.width
+    ctx.lineWidth = style.lineWidth
     if (style.dashArray) ctx.setLineDash(style.dashArray)
   }
 
   draw () {
+    this.initContainer()
     this.initCanvas()
 
-    this.updateTicks()
+    this.updateData()
 
     this.ctx.save()
 
