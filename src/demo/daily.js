@@ -9,7 +9,7 @@ const widthPrice = 300
 const heightPrice = 300
 const heightVolume = 85
 const heightAxis = 15
-const width = 800
+const width = 1000
 
 const gridXInterval = 'D1'
 const gridXInterval1 = 'D1'
@@ -70,8 +70,8 @@ const options = {
         interval: gridXInterval
       },
       horizontal: {
-        interval: 10,
-        lineColor: 'red'
+        interval: 10
+        // lineColor: 'red'
       },
       position: {
         height: heightPrice

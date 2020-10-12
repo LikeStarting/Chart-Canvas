@@ -58,7 +58,7 @@ class ScaleY {
     const b = range[0] - k * transformer(domain[0])
 
     return (x) => {
-      const result = k * x + b
+      const result = Math.round(k * x + b)
       if (clamp && result > range[1]) return range[1]
       if (clamp && result < range[0]) return range[0]
       return result

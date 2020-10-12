@@ -25,9 +25,20 @@ class BaseConfig {
     return this.options.type
   }
 
+  get width () {
+    return this.getWidthNumber()
+  }
+
+  get height () {
+    return this.getHeightNumber()
+  }
+
   get coordinate () {
-    const bottom = this.position.height
-    const right = this.position.width
+    let right = this.position.left + this.getWidthNumber()
+    let bottom = this.position.top + this.getHeightNumber()
+
+    if (right > this.chartConfig.style.width) right = this.getWidthNumber()
+    if (bottom > this.chartConfig.style.height) bottom = this.getHeightNumber()
 
     return {
       top: this.position.top,
@@ -35,6 +46,40 @@ class BaseConfig {
       left: this.position.left,
       right
     }
+  }
+
+  getWidthNumber () {
+    let { width } = this.position
+    const parentWidth = this.chartConfig.style.width
+    const { left, right } = this.chartConfig.style.padding
+
+    if (/\d%/.test(width)) {
+      const pct = parseFloat(width) >= 100 ? 100 : parseFloat(width)
+      width = parentWidth * pct / 100 - left - right
+      return width
+    }
+
+    const chartContentWidth = parentWidth - left - right
+    width = chartContentWidth >= width ? width : chartContentWidth
+
+    return width
+  }
+
+  getHeightNumber () {
+    let { height } = this.position
+    const parentHeight = this.chartConfig.style.height
+    const { top, bottom } = this.chartConfig.style.padding
+
+    if (/\d%/.test(height)) {
+      const pct = parseFloat(height) >= 100 ? 100 : parseFloat(height)
+      height = parentHeight * pct / 100 - top - bottom
+      return height
+    }
+
+    const chartContentHeight = parentHeight - top - bottom
+    height = chartContentHeight >= height ? height : chartContentHeight
+
+    return height
   }
 
   setYScale (yScale = {}) {

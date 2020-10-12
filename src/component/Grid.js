@@ -3,14 +3,11 @@ import tickX from '../scale/TickX'
 import tickY from '../scale/TickY'
 import scaleY from '../scale/ScaleY'
 
-import prices from '../demo/data/daily'
-
 class Grid extends Base {
   updateData () {
-    // const d = this.chart.timeSeries
-    const d = { prices }
+    const d = this.renderTimeSeries
 
-    const [maxDate, minDate] = this.data.getDateRange(d.prices)
+    const [minDate, maxDate] = this.data.getDateRange(d.prices)
     this.minDate = minDate
     this.maxDate = maxDate
 
@@ -76,11 +73,12 @@ class Grid extends Base {
 
   drawHorizontalLine (points) {
     const { ctx } = this
-    const correct = (ctx.lineWidth % 2) ? 0.5 : 0
+    const correct = (ctx.lineWidth % 2 === 0) ? 0 : 0.5
+
     for (const p of points) {
       ctx.beginPath()
-      ctx.moveTo(0, p.y + correct)
-      ctx.lineTo(this.config.position.width, p.y + correct)
+      ctx.moveTo(this.config.coordinate.left + correct, p.y + correct)
+      ctx.lineTo(this.config.coordinate.right + correct, p.y + correct)
       ctx.stroke()
       ctx.closePath()
     }
@@ -88,11 +86,12 @@ class Grid extends Base {
 
   drawVerticalLine (points) {
     const { ctx } = this
-    const correct = (ctx.lineWidth % 2) ? 0.5 : 0
+    const correct = (ctx.lineWidth % 2 === 0) ? 0 : 0.5
+
     for (const p of points) {
       ctx.beginPath()
-      ctx.moveTo(p.x + correct, 0)
-      ctx.lineTo(p.x + correct, this.config.position.height)
+      ctx.moveTo(p.x + correct, this.config.coordinate.top)
+      ctx.lineTo(p.x + correct, this.config.coordinate.bottom)
       ctx.stroke()
       ctx.closePath()
     }

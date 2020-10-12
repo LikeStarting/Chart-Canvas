@@ -10,7 +10,13 @@ class ChartBase {
     this._initContainer()
     this.initComponents()
     this.updateScale()
-    this.draw()
+    this.updateData().then(() => {
+      this.draw()
+    })
+  }
+
+  get renderTimeSeries () {
+    return this._renderTimeSeries
   }
 
   set options (options) {
@@ -21,6 +27,24 @@ class ChartBase {
     //   this.components.push(c)
     //   instance.draw()
     // })
+  }
+
+  updateData () {
+    return new Promise((resolve, reject) => {
+      this.data.getRenderTimeSeries()
+        .then((d) => {
+          this._renderTimeSeries = d
+
+          if (!this.components) {
+            this.initComponents()
+          }
+
+          resolve(d)
+        })
+        .catch(err => {
+          console.error(`Something is wrong: ${err}, when getting time series`)
+        })
+    })
   }
 
   initComponents () {
