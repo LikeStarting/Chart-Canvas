@@ -1,10 +1,12 @@
 import Base from './Base'
 
-import TickX from '../scale/TickX'
+import tickX from '../scale/TickX'
 
 export default class Axis extends Base {
   updateData () {
-    const [minDate, maxDate] = this.renderTimeSeries
+    const d = this.renderTimeSeries
+
+    const [minDate, maxDate] = this.data.getDateRange(d.prices)
     this.minDate = minDate
     this.maxDate = maxDate
 
@@ -21,7 +23,7 @@ export default class Axis extends Base {
     let xTicks = []
     const { marketTime, holidays, periodicity } = this.data
     if (this.config.tickIntervalX) {
-      xTicks = TickX.getTicks(minDate, maxDate, this.config.tickIntervalX, marketTime, holidays, periodicity)
+      xTicks = tickX.getTicks(new Date(minDate), new Date(maxDate), this.config.tickIntervalX, marketTime, holidays, periodicity)
     }
 
     return xTicks
@@ -50,13 +52,13 @@ export default class Axis extends Base {
     this.ctx.closePath()
   }
 
-  drawTicks () {
+  drawTicks (xTicks) {
     this.ctx.strokeStyle = this.config.style.tickLineColor
     this.ctx.lineWidth = this.config.style.tickLineWidth
 
     const correct = (this.ctx.lineWidth % 2) ? 0.5 : 0
 
-    this.xTicks().forEach(tick => {
+    xTicks.forEach(tick => {
       this.ctx.beginPath()
       this.ctx.moveTo(tick.x + correct, 0)
       this.ctx.lineTo(tick.x + correct, this.config.style.tickLineLength)
@@ -82,11 +84,11 @@ export default class Axis extends Base {
       y: 0
     }
     const endPoints = {
-      x: this.config.position.width,
+      x: this.config.coordinate.right,
       y: 0
     }
     this.drawLine(startPoints, endPoints)
-    this.drawTicks()
+    this.drawTicks(this.genXPoints(this.xTicks))
 
     this.ctx.restore()
   }

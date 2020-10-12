@@ -20,11 +20,11 @@ import CandlestickConfig from './CandlestickConfig'
 
 const componentRegister = {
   [ChartType.GRID]: [Grid, GridConfig],
-  [ChartType.Axis]: [Axis, AxisConfig],
+  [ChartType.AXIS]: [Axis, AxisConfig],
   [ChartType.Line]: [Line, LineConfig],
-  [ChartType.Bar]: [Bar, BarConfig],
+  [ChartType.BAR]: [Bar, BarConfig],
   [ChartType.HLC]: [HLC, HLCConfig],
-  [ChartType.Candlestick]: [Candlestick, CandlestickConfig]
+  [ChartType.CANDLESTICK]: [Candlestick, CandlestickConfig]
 }
 
 export function createComponent (data, config) {

@@ -15,7 +15,6 @@ class AxisConfig extends BaseConfig {
 
   getStyle (style = {}) {
     return {
-      interval: TimeInterval[style.interval],
       lineWidth: style.lineWidth || 1,
       lineColor: style.lineColor || 'black',
       tickLineWidth: style.tickLineWidth || 1,

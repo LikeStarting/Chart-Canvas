@@ -34,16 +34,13 @@ class BaseConfig {
   }
 
   get coordinate () {
-    let right = this.position.left + this.getWidthNumber()
-    let bottom = this.position.top + this.getHeightNumber()
-
-    if (right > this.chartConfig.style.width) right = this.getWidthNumber()
-    if (bottom > this.chartConfig.style.height) bottom = this.getHeightNumber()
+    const right = this.getWidthNumber()
+    const bottom = this.getHeightNumber()
 
     return {
-      top: this.position.top,
+      top: 0,
       bottom,
-      left: this.position.left,
+      left: 0,
       right
     }
   }

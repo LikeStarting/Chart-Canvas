@@ -92,11 +92,22 @@ const options = {
       },
       position: {
         top: heightPrice,
-        height: heightPrice
+        height: heightVolume
       },
       yScale: {
         type: priceScaleType
       }
+    },
+    {
+      type: 'axis',
+      tickIntervalX: gridXInterval,
+      // textOrient: 'right',
+      position: {
+        top: heightPrice + heightVolume
+      }
+      // style: {
+      //   textFormat: '%b %d'
+      // }
     }
     // {
     //   name: 'volume grid',
