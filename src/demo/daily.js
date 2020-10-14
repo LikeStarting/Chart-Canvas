@@ -55,7 +55,7 @@ const options = {
     width,
     height: heightAxis + heightPrice + heightVolume,
     tickWidth: 4,
-    // border: '1px solid',
+    border: '1px solid #000',
     padding: {
       top: 0,
       bottom: 0,
@@ -71,8 +71,7 @@ const options = {
         interval: gridXInterval
       },
       horizontal: {
-        interval: 10
-        // lineColor: 'red'
+        interval: 30
       },
       position: {
         height: heightPrice

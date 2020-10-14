@@ -7,8 +7,9 @@ export default class Container {
     this.chartContainer = document.createElement('div')
     this.chartContainer.userSelect = 'none'
     this.chartContainer.style.position = 'relative'
-    this.chartContainer.style.width = '100%'
-    this.chartContainer.style.height = '100%'
+    this.chartContainer.style.width = this.config.style.width + 'px'
+    this.chartContainer.style.height = this.config.style.height + 'px'
+    this.chartContainer.style.border = this.config.style.border
     this.container.appendChild(this.chartContainer)
   }
 }

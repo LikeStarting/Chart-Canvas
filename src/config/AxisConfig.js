@@ -11,6 +11,10 @@ class AxisConfig extends BaseConfig {
     this.style = this.getStyle(options.style)
 
     this.tickIntervalX = TimeInterval[options.tickIntervalX]
+
+    if (!options.position || !options.position.height) {
+      this.position.height = 15
+    }
   }
 
   getStyle (style = {}) {
