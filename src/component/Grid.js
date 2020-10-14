@@ -52,6 +52,7 @@ class Grid extends Base {
   getVerticalPoints (vTicks) {
     const { xScale } = this
     const verticalPoints = []
+
     vTicks.forEach(date => {
       verticalPoints.push({
         x: xScale(date)

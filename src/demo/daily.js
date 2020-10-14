@@ -11,8 +11,9 @@ const heightVolume = 85
 const heightAxis = 15
 const width = 1000
 
-const gridXInterval = 'D1'
-const gridXInterval1 = 'D1'
+const gridXInterval = 'm1'
+const gridXInterval1 = 'm1'
+const axisXInterval = 'W2'
 
 const volumes = []
 
@@ -100,7 +101,7 @@ const options = {
     },
     {
       type: 'axis',
-      tickIntervalX: gridXInterval,
+      tickIntervalX: axisXInterval,
       // textOrient: 'right',
       position: {
         top: heightPrice + heightVolume
