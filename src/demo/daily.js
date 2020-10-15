@@ -13,7 +13,7 @@ const width = 1000
 
 const gridXInterval = 'm1'
 const gridXInterval1 = 'm1'
-const axisXInterval = 'W2'
+const axisXInterval = 'm1'
 
 const volumes = []
 

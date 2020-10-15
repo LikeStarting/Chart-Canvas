@@ -40,6 +40,25 @@ export default class Axis extends Base {
     return xPoints
   }
 
+  genTextPoints (xTicks) {
+    const { xScale } = this
+    const { textPadding } = this.config.style
+    const [top, right, bottom, left] = textPadding
+
+    this.ctx.textAlign = 'center'
+    const textPoints = xTicks.map((tick, i) => {
+      let x = xScale(tick) + left
+      if (xTicks[i + 1]) {
+        const nextX = xScale(xTicks[i + 1])
+        x = x + (nextX - x) / 2
+      }
+      const y = this.config.coordinate.top + top
+      return { x, y, date: tick }
+    })
+
+    return textPoints
+  }
+
   drawLine (start, end) {
     this.ctx.strokeStyle = this.config.style.lineColor
     this.ctx.lineWidth = this.config.style.lineWidth
@@ -67,6 +86,20 @@ export default class Axis extends Base {
     })
   }
 
+  drawText (xTicks) {
+    const { textSize, textWeight, textFamily, textColor } = this.config.style
+
+    this.ctx.textBaseline = 'top'
+    this.ctx.font = `${textSize}px ${textWeight} ${textFamily}`
+    this.ctx.fillStyle = textColor
+
+    const format = (d) => `${d.getMonth() + 1}/${d.getFullYear() % 100}`
+
+    xTicks.forEach(tick => {
+      this.ctx.fillText(format(tick.date), tick.x, tick.y)
+    })
+  }
+
   // genYTicks () {
 
   // }
@@ -89,6 +122,7 @@ export default class Axis extends Base {
     }
     this.drawLine(startPoints, endPoints)
     this.drawTicks(this.genXPoints(this.xTicks))
+    this.drawText(this.genTextPoints(this.xTicks))
 
     this.ctx.restore()
   }

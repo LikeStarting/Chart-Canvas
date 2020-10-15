@@ -23,7 +23,14 @@ class AxisConfig extends BaseConfig {
       lineColor: style.lineColor || 'black',
       tickLineWidth: style.tickLineWidth || 1,
       tickLineLength: style.tickLineLength || 15,
-      tickLineColor: style.tickLineColor || 'black'
+      tickLineColor: style.tickLineColor || 'black',
+      textSize: style.textSize || 10,
+      textWeight: style.textWeight || 'normal',
+      textFamily: style.textFamily || 'calibri',
+      textColor: style.textColor || 'black',
+      textAlign: style.textAlign || 'left',
+      textPadding: style.textPadding || [0, 0, 0, 0]
+      // textFormat: ''
     }
   }
 }
