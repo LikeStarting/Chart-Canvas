@@ -42,20 +42,31 @@ export default class Axis extends Base {
 
   genTextPoints (xTicks) {
     const { xScale } = this
-    const { textPadding } = this.config.style
+    const { lineWidth, tickLineWidth, textPadding, textAlign, textVerticalAlign } = this.config.style
     const [top, right, bottom, left] = textPadding
 
-    this.ctx.textAlign = 'center'
     const textPoints = xTicks.map((tick, i) => {
-      let x = xScale(tick) + left
-      if (xTicks[i + 1]) {
-        const nextX = xScale(xTicks[i + 1])
+      let x = xScale(tick) + left + tickLineWidth
+      if (xTicks[i + 1] && textAlign === 'center') {
+        const nextX = xScale(xTicks[i + 1]) - right
         x = x + (nextX - x) / 2
       }
-      const y = this.config.coordinate.top + top
+      if (xTicks[i + 1] && textAlign === 'right') {
+        x = xScale(xTicks[i + 1]) - right
+      }
+
+      let y = this.config.coordinate.top + top + lineWidth
+      if (textVerticalAlign === 'middle') {
+        const height = this.config.position.height
+        y = y + (height + lineWidth - y) / 2
+      }
+      if (textVerticalAlign === 'bottom') {
+        const height = this.config.position.height
+        y = height - bottom
+      }
+
       return { x, y, date: tick }
     })
-
     return textPoints
   }
 
@@ -87,15 +98,19 @@ export default class Axis extends Base {
   }
 
   drawText (xTicks) {
-    const { textSize, textWeight, textFamily, textColor } = this.config.style
+    const { textSize, textWeight, textFamily, textColor, textAlign, textVerticalAlign } = this.config.style
 
-    this.ctx.textBaseline = 'top'
     this.ctx.font = `${textSize}px ${textWeight} ${textFamily}`
     this.ctx.fillStyle = textColor
+    this.ctx.textAlign = textAlign
+    this.ctx.textBaseline = textVerticalAlign
 
-    const format = (d) => `${d.getMonth() + 1}/${d.getFullYear() % 100}`
+    const format = (d) => `${d.getMonth() + 1}-${d.getFullYear() % 100}`
 
-    xTicks.forEach(tick => {
+    xTicks.forEach((tick, i) => {
+      if (!xTicks[i + 1] && (textAlign === 'center' || textAlign === 'right')) {
+        this.ctx.textAlign = 'left'
+      }
       this.ctx.fillText(format(tick.date), tick.x, tick.y)
     })
   }

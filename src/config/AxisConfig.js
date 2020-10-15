@@ -29,6 +29,7 @@ class AxisConfig extends BaseConfig {
       textFamily: style.textFamily || 'calibri',
       textColor: style.textColor || 'black',
       textAlign: style.textAlign || 'left',
+      textVerticalAlign: style.textVerticalAlign || 'middle',
       textPadding: style.textPadding || [0, 0, 0, 0]
       // textFormat: ''
     }
