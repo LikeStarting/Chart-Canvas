@@ -13,6 +13,7 @@ const width = 1000
 
 const gridXInterval = 'm1'
 const gridXInterval1 = 'm1'
+const gridXInterval2 = 'Q1'
 const axisXInterval = 'm1'
 
 const volumes = []
@@ -82,9 +83,48 @@ const options = {
     },
     {
       type: 'grid',
+      id: 'price_grid2',
+      vertical: {
+        interval: gridXInterval2,
+        dashArray: 0
+      },
+      horizontal: {
+        display: false
+      },
+      position: {
+        height: heightPrice
+      },
+      yScale: {
+        type: priceScaleType
+      }
+    },
+    {
+      type: 'grid',
       id: 'volume_grid',
       vertical: {
-        interval: gridXInterval1,
+        interval: gridXInterval1
+      },
+      horizontal: {
+        interval: 30
+      },
+      position: {
+        top: heightPrice,
+        height: heightVolume
+      },
+      yScale: {
+        type: priceScaleType
+      },
+      border: {
+        top: {
+          display: true
+        }
+      }
+    },
+    {
+      type: 'grid',
+      id: 'volume_grid2',
+      vertical: {
+        interval: gridXInterval2,
         dashArray: 0
       },
       horizontal: {

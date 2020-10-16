@@ -14,6 +14,8 @@ class BaseConfig {
       ...this.options.position
     }
 
+    this.setBorder(options.border)
+
     this.setYScale(options.yScale)
   }
 
@@ -92,6 +94,25 @@ class BaseConfig {
     this.yScale.type = yScale.type || 'linear'
     this.yScale.logBase = yScale.logBase || 10
     this.yScale.powExponent = yScale.powExponent || 0.5
+  }
+
+  setBorder (border = {}) {
+    this.border = {}
+
+    const defaultBorder = {
+      display: false,
+      lineWidth: 1,
+      lineColor: 'black',
+      dashArray: 0
+    }
+    const { top, right, bottom, left } = border
+
+    this.border = {
+      top: { ...defaultBorder, ...(top || {}) },
+      right: { ...defaultBorder, ...(right || {}) },
+      bottom: { ...defaultBorder, ...(bottom || {}) },
+      left: { ...defaultBorder, ...(left || {}) }
+    }
   }
 }
 

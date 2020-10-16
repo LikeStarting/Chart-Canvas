@@ -127,6 +127,8 @@ export default class Axis extends Base {
 
     this.ctx.save()
 
+    this.drawBorder()
+
     const startPoints = {
       x: 0,
       y: 0

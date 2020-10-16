@@ -112,6 +112,8 @@ class Grid extends Base {
 
     this.ctx.save()
 
+    this.drawBorder()
+
     if (this.config.horizontal.display) {
       this.setLineStyle(this.ctx, this.config.horizontal)
       this.drawHorizontalLine(this.getHorizontalPoints(this.hTicks))

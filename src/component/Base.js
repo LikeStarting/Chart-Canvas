@@ -49,6 +49,57 @@ export default class Base {
     this.ctx.scale(pixelRadio, pixelRadio)
   }
 
+  drawLine (start, end) {
+    this.ctx.beginPath()
+    this.ctx.moveTo(start.x, start.y)
+    this.ctx.lineTo(end.x, end.y)
+    this.ctx.stroke()
+    this.ctx.closePath()
+  }
+
+  drawBorder () {
+    for (const [k, v] of Object.entries(this.config.border)) {
+      if (v.display) {
+        this.ctx.lineWidth = v.lineWidth
+        this.ctx.strokeStyle = v.lineColor
+        if (v.dashArray) this.ctx.setLineDash(v.dashArray)
+        const { start, end } = this.getBorderPoints(k)
+        this.drawLine(start, end)
+      }
+    }
+  }
+
+  getBorderPoints (orientation) {
+    const { top, right, bottom, left } = this.config.coordinate
+
+    let start = {}
+    let end = {}
+    const correct = this.ctx.lineWidth % 2 === 0 ? 0 : 0.5
+
+    switch (orientation) {
+      case 'top':
+        start = { x: left, y: top + correct }
+        end = { x: right, y: top + correct }
+        break
+      case 'right':
+        start = { x: right + correct, y: top }
+        end = { x: right + correct, y: bottom }
+        break
+      case 'bottom':
+        start = { x: left, y: bottom + correct }
+        end = { x: right, y: bottom + correct }
+        break
+      case 'left':
+        start = { x: left + correct, y: top }
+        end = { x: left + correct, y: bottom }
+        break
+    }
+
+    return {
+      start, end
+    }
+  }
+
   redraw (callback) {
     if (callback) {
       callback()
