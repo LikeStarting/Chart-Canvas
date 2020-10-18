@@ -25,6 +25,9 @@ class ScaleY {
       case 'auto':
         yScale = this.getScaleMap(scaleConfig, domain, range)
         break
+      default:
+        yScale = this.getScaleMap(scaleConfig, domain, range)
+        break
     }
 
     return {

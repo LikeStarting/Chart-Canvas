@@ -112,7 +112,8 @@ const options = {
         height: heightVolume
       },
       yScale: {
-        type: priceScaleType
+        type: volumeScaleType,
+        value: 'volume'
       },
       border: {
         top: {
@@ -135,11 +136,13 @@ const options = {
         height: heightVolume
       },
       yScale: {
-        type: priceScaleType
+        type: volumeScaleType,
+        value: 'volume'
       }
     },
     {
       type: 'axis',
+      id: 'axis_time',
       tickIntervalX: axisXInterval,
       // textOrient: 'right',
       position: {
@@ -150,6 +153,42 @@ const options = {
       // }
     },
     {
+      type: 'axis',
+      id: 'axis_price',
+      locate: 'right',
+      tickIntervalY: 30,
+      position: {
+        left: width - 40,
+        width: 40,
+        height: heightPrice
+      },
+      yScale: {
+        type: priceScaleType
+      },
+      style: {
+        tickLineLength: 5
+      }
+    },
+    {
+      type: 'axis',
+      id: 'axis_volume',
+      locate: 'right',
+      tickIntervalY: 30,
+      position: {
+        left: width - 40,
+        width: 40,
+        top: heightPrice,
+        height: heightVolume
+      },
+      yScale: {
+        type: volumeScaleType,
+        value: 'volume'
+      },
+      style: {
+        tickLineLength: 5
+      }
+    },
+    {
       name: 'volume bar',
       type: 'bar',
       yScale: {
@@ -157,6 +196,7 @@ const options = {
         value: 'volume'
       },
       position: {
+        right: 0,
         top: heightPrice,
         height: heightVolume
       },
@@ -181,44 +221,6 @@ const options = {
         lineWidth: 2
       }
     }
-    // {
-    //   name: 'volume grid',
-    //   type: 'grid',
-    //   vertical: {
-    //     interval: gridXInterval
-    //   },
-    //   horizontal: {
-    //     interval: 30,
-    //     displayLabel: true,
-    //     labelColor: '#a9acaf'
-    //   },
-    //   yScale: {
-    //     value: 'price.volume',
-    //     type: volumeScaleType
-    //   },
-    //   position: {
-    //     top: heightPrice,
-    //     height: heightVolume
-    //   }
-    // },
-    // {
-    //   type: 'grid',
-    //   vertical: {
-    //     interval: gridXInterval1,
-    //     dashArray: 0
-    //   },
-    //   horizontal: {
-    //     display: false
-    //   },
-    //   position: {
-    //     top: heightPrice,
-    //     height: heightVolume
-    //   },
-    //   yScale: {
-    //     value: 'price.volume',
-    //     type: volumeScaleType
-    //   }
-    // },
     // {
     //   type: 'line',
     //   value: 'tsVolMA',

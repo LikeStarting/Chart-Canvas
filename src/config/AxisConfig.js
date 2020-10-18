@@ -10,7 +10,13 @@ class AxisConfig extends BaseConfig {
 
     this.style = this.getStyle(options.style)
 
-    this.tickIntervalX = TimeInterval[options.tickIntervalX]
+    if (this.locate === 'top' || this.locate === 'bottom') {
+      this.tickIntervalX = TimeInterval[options.tickIntervalX]
+    } else if (this.locate === 'left' || this.locate === 'right') {
+      this.tickIntervalY = options.tickIntervalY
+    } else {
+      throw Error(`Can't support the locate: ${options.locate}.`)
+    }
 
     if (!options.position || !options.position.height) {
       this.position.height = 15

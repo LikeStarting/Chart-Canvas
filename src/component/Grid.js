@@ -54,7 +54,7 @@ class Grid extends Base {
     const verticalPoints = []
 
     const { top, bottom } = this.config.coordinate
-    const correct = (this.ctx.lineWidth % 2 === 0) ? 0 : 0.5
+    const correct = (this.config.vertical.lineWidth % 2 === 0) ? 0 : 0.5
 
     vTicks.forEach(date => {
       const x = xScale(date) + correct
@@ -71,7 +71,7 @@ class Grid extends Base {
     const horizontalPoints = []
 
     const { left, right } = this.config.coordinate
-    const correct = (this.ctx.lineWidth % 2 === 0) ? 0 : 0.5
+    const correct = (this.config.horizontal.lineWidth % 2 === 0) ? 0 : 0.5
 
     hTicks.forEach(tick => {
       const y = yScale(tick) + correct
