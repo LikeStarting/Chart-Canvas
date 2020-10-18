@@ -34,8 +34,8 @@ class DataConfig {
     return [prices[0].date, prices[prices.length - 1].date]
   }
 
-  getRenderTimeSeries () {
-    return this.tsLoader.getRenderTimeSeries()
+  getRenderTimeSeries (width, left, tickWidth) {
+    return this.tsLoader.getRenderTimeSeries(width, left, tickWidth)
   }
 
   setPeriodicity (periodicity) {

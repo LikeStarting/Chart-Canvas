@@ -53,9 +53,14 @@ class Grid extends Base {
     const { xScale } = this
     const verticalPoints = []
 
+    const { top, bottom } = this.config.coordinate
+    const correct = (this.ctx.lineWidth % 2 === 0) ? 0 : 0.5
+
     vTicks.forEach(date => {
+      const x = xScale(date) + correct
       verticalPoints.push({
-        x: xScale(date)
+        start: { x, y: top },
+        end: { x, y: bottom }
       })
     })
     return verticalPoints
@@ -64,37 +69,29 @@ class Grid extends Base {
   getHorizontalPoints (hTicks) {
     const { yScale } = this
     const horizontalPoints = []
+
+    const { left, right } = this.config.coordinate
+    const correct = (this.ctx.lineWidth % 2 === 0) ? 0 : 0.5
+
     hTicks.forEach(tick => {
+      const y = yScale(tick) + correct
       horizontalPoints.push({
-        y: yScale(tick)
+        start: { x: left, y },
+        end: { x: right, y }
       })
     })
     return horizontalPoints
   }
 
   drawHorizontalLine (points) {
-    const { ctx } = this
-    const correct = (ctx.lineWidth % 2 === 0) ? 0 : 0.5
-
     for (const p of points) {
-      ctx.beginPath()
-      ctx.moveTo(this.config.coordinate.left + correct, p.y + correct)
-      ctx.lineTo(this.config.coordinate.right + correct, p.y + correct)
-      ctx.stroke()
-      ctx.closePath()
+      this.drawLine(p.start, p.end)
     }
   }
 
   drawVerticalLine (points) {
-    const { ctx } = this
-    const correct = (ctx.lineWidth % 2 === 0) ? 0 : 0.5
-
     for (const p of points) {
-      ctx.beginPath()
-      ctx.moveTo(p.x + correct, this.config.coordinate.top)
-      ctx.lineTo(p.x + correct, this.config.coordinate.bottom)
-      ctx.stroke()
-      ctx.closePath()
+      this.drawLine(p.start, p.end)
     }
   }
 

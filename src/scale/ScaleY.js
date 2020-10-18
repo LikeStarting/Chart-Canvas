@@ -1,10 +1,10 @@
 class ScaleY {
   createScale (scaleConfig, timeSeries, top, bottom) {
     let yScale = null
-    const { minVal, maxVal } = this.getValueDomain(timeSeries)
+    const { minVal, maxVal } = this.getValueDomain(timeSeries, scaleConfig)
 
     let domain = [minVal, maxVal]
-    const range = [bottom, top]
+    const range = [top, bottom]
 
     if (!['linear', 'log', 'pow', 'auto'].includes(scaleConfig.type)) {
       throw new Error(`Do not support ${scaleConfig.type} yet.`)
@@ -58,26 +58,40 @@ class ScaleY {
     const b = range[0] - k * transformer(domain[0])
 
     return (x) => {
-      const result = Math.round(k * x + b)
+      const result = Math.round(k * transformer(x) + b)
       if (clamp && result > range[1]) return range[1]
       if (clamp && result < range[0]) return range[0]
       return result
     }
   }
 
-  getValueDomain (timeSeries) {
+  getValueDomain (timeSeries, scaleConfig) {
     let minVal
     let maxVal
 
     const isLegal = v => v !== null && typeof v !== 'undefined'
-    const ts = timeSeries.prices.filter(p => isLegal(p.close) && isLegal(p.high) && isLegal(p.low))
 
-    for (const v of ts) {
-      if (minVal === undefined || minVal > v.low) {
-        minVal = v.low
+    if (scaleConfig.value) {
+      const ts = timeSeries[scaleConfig.value].filter(data => isLegal(data.value))
+
+      for (const v of ts) {
+        if (minVal === undefined || minVal > v.value) {
+          minVal = v.value
+        }
+        if (maxVal === undefined || maxVal < v.value) {
+          maxVal = v.value
+        }
       }
-      if (maxVal === undefined || maxVal < v.high) {
-        maxVal = v.high
+    } else {
+      const ts = timeSeries.prices.filter(p => isLegal(p.close) && isLegal(p.high) && isLegal(p.low))
+
+      for (const v of ts) {
+        if (minVal === undefined || minVal > v.low) {
+          minVal = v.low
+        }
+        if (maxVal === undefined || maxVal < v.high) {
+          maxVal = v.high
+        }
       }
     }
 

@@ -21,6 +21,10 @@ class ChartConfig {
     this.components = options.components.map(cfg => createConfig(cfg, this))
   }
 
+  get tickWidth () {
+    return this.options.tickWidth || 5
+  }
+
   get horizontalRange () {
     return [this.style.padding.left, this.style.width - this.style.padding.left - this.style.padding.right]
   }

@@ -32,9 +32,13 @@ export default class Axis extends Base {
   genXPoints (xTicks) {
     const { xScale } = this
     const xPoints = []
+    const { tickLineLength } = this.config.style
+    const correct = (this.ctx.lineWidth % 2) ? 0.5 : 0
     xTicks.forEach(tick => {
+      const x = xScale(tick) + correct
       xPoints.push({
-        x: xScale(tick)
+        start: { x, y: 0 },
+        end: { x, y: tickLineLength }
       })
     })
     return xPoints
@@ -70,30 +74,29 @@ export default class Axis extends Base {
     return textPoints
   }
 
-  drawLine (start, end) {
+  drawXLine () {
     this.ctx.strokeStyle = this.config.style.lineColor
     this.ctx.lineWidth = this.config.style.lineWidth
 
     const correct = (this.ctx.lineWidth % 2) ? 0.5 : 0
-    this.ctx.beginPath()
-    this.ctx.moveTo(start.x, start.y + correct)
-    this.ctx.lineTo(end.x, end.y + correct)
-    this.ctx.stroke()
-    this.ctx.closePath()
+    const start = {
+      x: 0,
+      y: 0 + correct
+    }
+    const end = {
+      x: this.config.coordinate.right,
+      y: 0 + correct
+    }
+
+    this.drawLine(start, end)
   }
 
   drawTicks (xTicks) {
     this.ctx.strokeStyle = this.config.style.tickLineColor
     this.ctx.lineWidth = this.config.style.tickLineWidth
 
-    const correct = (this.ctx.lineWidth % 2) ? 0.5 : 0
-
     xTicks.forEach(tick => {
-      this.ctx.beginPath()
-      this.ctx.moveTo(tick.x + correct, 0)
-      this.ctx.lineTo(tick.x + correct, this.config.style.tickLineLength)
-      this.ctx.stroke()
-      this.ctx.closePath()
+      this.drawLine(tick.start, tick.end)
     })
   }
 
@@ -128,16 +131,7 @@ export default class Axis extends Base {
     this.ctx.save()
 
     this.drawBorder()
-
-    const startPoints = {
-      x: 0,
-      y: 0
-    }
-    const endPoints = {
-      x: this.config.coordinate.right,
-      y: 0
-    }
-    this.drawLine(startPoints, endPoints)
+    this.drawXLine()
     this.drawTicks(this.genXPoints(this.xTicks))
     this.drawText(this.genTextPoints(this.xTicks))
 

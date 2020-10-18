@@ -3,7 +3,7 @@ import prices from './data/daily'
 import Chart from '../chart'
 
 const priceScaleType = 'linear'
-// const volumeScaleType = 'pow'
+const volumeScaleType = 'pow'
 
 const widthPrice = 300
 const heightPrice = 300
@@ -148,6 +148,38 @@ const options = {
       // style: {
       //   textFormat: '%b %d'
       // }
+    },
+    {
+      name: 'volume bar',
+      type: 'bar',
+      yScale: {
+        type: volumeScaleType,
+        value: 'volume'
+      },
+      position: {
+        top: heightPrice,
+        height: heightVolume
+      },
+      style: {
+        upColor: 'rgb(39, 54, 233)',
+        downColor: 'rgb(222, 50, 174)'
+      }
+    },
+    {
+      name: 'price bar',
+      type: 'hlc',
+      yScale: {
+        type: priceScaleType
+      },
+      position: {
+        height: heightPrice
+      },
+      style: {
+        upColor: 'rgb(39, 54, 233)',
+        downColor: 'rgb(222, 50, 174)',
+        tickBarWidth: 4,
+        lineWidth: 2
+      }
     }
     // {
     //   name: 'volume grid',

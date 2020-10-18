@@ -48,6 +48,10 @@ class TSLoader {
     const renderPrices = this.slicePrice(start, end)
     const result = {}
     result.prices = renderPrices
+    result.volume = renderPrices.map(ts => ({
+      date: ts.date,
+      value: ts.volume
+    }))
 
     return result
   }
