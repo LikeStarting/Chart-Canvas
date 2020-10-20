@@ -207,7 +207,7 @@ const options = {
     },
     {
       name: 'price bar',
-      type: 'hlc',
+      type: 'candlestick',
       yScale: {
         type: priceScaleType
       },
@@ -251,17 +251,6 @@ const options = {
     //   style: {
     //     upColor: 'rgb(39, 54, 233)',
     //     downColor: 'rgb(222, 50, 174)'
-    //   }
-    // },
-    // {
-    //   type: 'axis',
-    //   ticksIntervalX: gridXInterval,
-    //   textOrient: 'right',
-    //   position: {
-    //     top: heightPrice + heightVolume
-    //   },
-    //   style: {
-    //     textFormat: '%b %d'
     //   }
     // },
     // {
