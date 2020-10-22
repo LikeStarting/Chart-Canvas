@@ -3,6 +3,7 @@ import Base from './Base'
 import tickX from '../scale/TickX'
 import tickY from '../scale/TickY'
 import scaleY from '../scale/ScaleY'
+import { formatNum } from '../utils/format'
 
 export default class Axis extends Base {
   updateData () {
@@ -60,8 +61,8 @@ export default class Axis extends Base {
   genXPoints (xTicks) {
     const { xScale } = this
     const xPoints = []
-    const { lineWidth, tickLineLength } = this.config.style
-    const correct = (lineWidth % 2 === 0) ? 0 : 0.5
+    const { tickLineWidth, tickLineLength } = this.config.style
+    const correct = (tickLineWidth % 2 === 0) ? 0 : 0.5
     xTicks.forEach(tick => {
       const x = xScale(tick) + correct
       xPoints.push({
@@ -75,11 +76,12 @@ export default class Axis extends Base {
   genYPoints (yTicks) {
     const { yScale } = this
     const yPoints = []
-    const { lineWidth, tickLineLength } = this.config.style
-    const correct = (lineWidth % 2 === 0) ? 0 : 0.5
+    const { tickLineWidth, tickLineLength } = this.config.style
+    const correct = (tickLineWidth % 2 === 0) ? 0 : 0.5
 
     yTicks.forEach(tick => {
-      const y = yScale(tick) + correct
+      const y = this.config.height - yScale(tick) + correct
+      // console.log('y----', y, tick, yScale(tick))
       yPoints.push({
         start: { x: 0, y },
         end: { x: tickLineLength, y }
@@ -92,15 +94,16 @@ export default class Axis extends Base {
     const { xScale } = this
     const { lineWidth, tickLineWidth, textPadding, textAlign, textVerticalAlign } = this.config.style
     const [top, right, bottom, left] = textPadding
+    const correct = (tickLineWidth % 2 === 0) ? 0 : 0.5
 
     const textPoints = xTicks.map((tick, i) => {
-      let x = xScale(tick) + left + tickLineWidth
+      let x = xScale(tick) + left + tickLineWidth + correct
       if (xTicks[i + 1] && textAlign === 'center') {
-        const nextX = xScale(xTicks[i + 1]) - right
+        const nextX = xScale(xTicks[i + 1]) - right + correct
         x = x + (nextX - x) / 2
       }
       if (xTicks[i + 1] && textAlign === 'right') {
-        x = xScale(xTicks[i + 1]) - right
+        x = xScale(xTicks[i + 1]) - right + correct
       }
 
       let y = this.config.coordinate.top + top + lineWidth
@@ -115,6 +118,20 @@ export default class Axis extends Base {
 
       return { x, y, date: tick }
     })
+    return textPoints
+  }
+
+  genYTextPoints (yTicks) {
+    const { yScale } = this
+    const { tickLineWidth, tickLineLength } = this.config.style
+    const correct = tickLineWidth % 2 === 0 ? 0 : 0.5
+    const textPoints = yTicks.map((tick, i) => {
+      const x = tickLineLength + 2
+      const y = this.config.height - yScale(tick) + correct
+
+      return { x, y, v: formatNum(tick) }
+    })
+
     return textPoints
   }
 
@@ -179,9 +196,20 @@ export default class Axis extends Base {
     })
   }
 
-  // genYTicks () {
+  drawYText (yTicks) {
+    const { textSize, textWeight, textFamily, textColor } = this.config.style
+    const { bottom } = this.config.coordinate
 
-  // }
+    this.ctx.font = `${textSize}px ${textWeight} ${textFamily}`
+    this.ctx.fillStyle = textColor
+    this.ctx.textBaseline = 'middle'
+
+    yTicks.forEach((tick, i) => {
+      if (tick.y < textSize || tick.y > bottom - textSize) return
+
+      this.ctx.fillText(tick.v, tick.x, tick.y)
+    })
+  }
 
   draw () {
     this.initContainer()
@@ -202,6 +230,7 @@ export default class Axis extends Base {
     if (this.config.locate === 'left' || this.config.locate === 'right') {
       this.drawYLine()
       this.drawTicks(this.genYPoints(this.yTicks))
+      this.drawYText(this.genYTextPoints(this.yTicks))
     }
 
     this.ctx.restore()

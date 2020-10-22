@@ -98,9 +98,14 @@ class ScaleY {
       }
     }
 
+    const range = Math.abs(maxVal - minVal)
+
+    const adjustMinVal = minVal - range * 0.1
+    const adjustMaxVal = maxVal + range * 0.2
+
     return {
-      minVal,
-      maxVal
+      minVal: adjustMinVal > 0 ? adjustMinVal : 0,
+      maxVal: adjustMaxVal
     }
   }
 }

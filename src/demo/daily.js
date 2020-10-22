@@ -6,8 +6,8 @@ const priceScaleType = 'linear'
 const volumeScaleType = 'pow'
 
 const widthPrice = 300
-const heightPrice = 300
-const heightVolume = 85
+const heightPrice = 500
+const heightVolume = 150
 const heightAxis = 15
 const width = 1000
 
@@ -207,7 +207,7 @@ const options = {
     },
     {
       name: 'price bar',
-      type: 'candlestick',
+      type: 'hlc',
       yScale: {
         type: priceScaleType
       },

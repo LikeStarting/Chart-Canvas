@@ -32,13 +32,13 @@ class HLC extends Base {
     bars.forEach(bar => {
       const highLowPoint = {
         x: xScale(bar.date) + correct - lineWidth / 2,
-        y: yScale(bar.high),
+        y: this.config.height - yScale(bar.high),
         width: lineWidth,
-        height: yScale(bar.low) - yScale(bar.high)
+        height: yScale(bar.high) - yScale(bar.low)
       }
       const closePoint = {
-        start: { x: xScale(bar.date) - tickBarWidth / 2, y: yScale(bar.close) + correct },
-        end: { x: xScale(bar.date) + tickBarWidth / 2, y: yScale(bar.close) + correct }
+        start: { x: xScale(bar.date) - tickBarWidth / 2, y: this.config.height - yScale(bar.close) + correct },
+        end: { x: xScale(bar.date) + tickBarWidth / 2, y: this.config.height - yScale(bar.close) + correct }
       }
       pointBars.push({
         highLowPoint,

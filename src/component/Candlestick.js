@@ -17,25 +17,25 @@ class Candlestick extends HLC {
       }
 
       const topLinePoint = {
-        start: { x: xScale(bar.date) - lineWidth / 2 + correct, y: yScale(bar.high) },
-        end: { x: xScale(bar.date) - lineWidth / 2 + correct, y: null }
+        start: { x: xScale(bar.date) + correct, y: this.config.height - yScale(bar.high) },
+        end: { x: xScale(bar.date) + correct, y: null }
       }
 
       const bottomLinePoint = {
-        start: { x: xScale(bar.date) - lineWidth / 2 + correct, y: null },
-        end: { x: xScale(bar.date) - lineWidth / 2 + correct, y: yScale(bar.low) }
+        start: { x: xScale(bar.date) + correct, y: null },
+        end: { x: xScale(bar.date) + correct, y: this.config.height - yScale(bar.low) }
       }
 
       if (bar.open > bar.close) {
-        openClosePoint.y = yScale(bar.open)
-        openClosePoint.height = yScale(bar.close) - yScale(bar.open)
-        topLinePoint.end.y = yScale(bar.open)
-        bottomLinePoint.start.y = yScale(bar.close)
-      } else {
-        openClosePoint.y = yScale(bar.close)
+        openClosePoint.y = this.config.height - yScale(bar.open)
         openClosePoint.height = yScale(bar.open) - yScale(bar.close)
-        topLinePoint.end.y = yScale(bar.close)
-        bottomLinePoint.start.y = yScale(bar.open)
+        topLinePoint.end.y = this.config.height - yScale(bar.open)
+        bottomLinePoint.start.y = this.config.height - yScale(bar.close)
+      } else {
+        openClosePoint.y = this.config.height - yScale(bar.close)
+        openClosePoint.height = yScale(bar.close) - yScale(bar.open)
+        topLinePoint.end.y = this.config.height - yScale(bar.close)
+        bottomLinePoint.start.y = this.config.height - yScale(bar.open)
       }
 
       pointBars.push({

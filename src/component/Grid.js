@@ -25,7 +25,6 @@ class Grid extends Base {
     this.yScale = yScale
     this.minVal = minVal
     this.maxVal = maxVal
-    this.rangeY = Math.abs(maxVal - minVal)
 
     if (this.config.horizontal.display) {
       this.hTicks = this.genHorizontalTicks()
@@ -74,7 +73,7 @@ class Grid extends Base {
     const correct = (this.config.horizontal.lineWidth % 2 === 0) ? 0 : 0.5
 
     hTicks.forEach(tick => {
-      const y = yScale(tick) + correct
+      const y = this.config.height - yScale(tick) + correct
       horizontalPoints.push({
         start: { x: left, y },
         end: { x: right, y }

@@ -33,7 +33,7 @@ class Bar extends Base {
     bars.forEach(bar => {
       pointBars.push({
         x: xScale(bar.date) + correct - lineWidth / 2,
-        y: yScale(bar.volume)
+        y: this.config.height - yScale(bar.volume)
       })
     })
 
