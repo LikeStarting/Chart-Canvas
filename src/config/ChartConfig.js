@@ -25,8 +25,14 @@ class ChartConfig {
     return this.options.tickWidth || 5
   }
 
+  get chartWidth () {
+    const [left, right] = this.horizontalRange
+
+    return right - left
+  }
+
   get horizontalRange () {
-    return [this.style.padding.left, this.style.width - this.style.padding.left - this.style.padding.right]
+    return [0, this.style.width - this.style.padding.left - this.style.padding.right]
   }
 }
 

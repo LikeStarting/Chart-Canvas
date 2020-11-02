@@ -31,7 +31,7 @@ class ChartBase {
 
   updateData () {
     return new Promise((resolve, reject) => {
-      this.data.getRenderTimeSeries()
+      this.data.getRenderTimeSeries(this.config.chartWidth, this.config.style.tickWidth)
         .then((d) => {
           this._renderTimeSeries = d
 

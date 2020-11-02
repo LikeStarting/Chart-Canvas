@@ -2,11 +2,10 @@ import scaleX from '../scale/ScaleX'
 
 class Scale {
   getScaleRange () {
-    // const { prices } = this.data
-    const [rangeLeft, rangeRight] = this.config.horizontalRange
+    const { prices } = this.data
+    const rangeRight = this.config.horizontalRange[1]
 
-    return [rangeLeft, rangeRight]
-    // return [rangeRight - prices.length * this.config.style.tickWidth, rangeRight]
+    return [rangeRight - prices.length * this.config.style.tickWidth, rangeRight]
   }
 
   updateScale () {
