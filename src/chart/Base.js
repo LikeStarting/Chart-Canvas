@@ -7,8 +7,8 @@ class ChartBase {
   constructor (data, options) {
     this._data = new DataConfig(data)
     this.options = options
-    this._initContainer()
-    this.initComponents()
+    this.initContainer()
+    this.initEvent()
     this.updateScale()
     this.updateData().then(() => {
       this.draw()

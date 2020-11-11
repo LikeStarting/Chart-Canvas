@@ -3,7 +3,7 @@ export default class Container {
     return document.getElementById(this.config.root) || document.getElementsByClassName(this.config.root)[0]
   }
 
-  _initContainer () {
+  initContainer () {
     this.chartContainer = document.createElement('div')
     this.chartContainer.userSelect = 'none'
     this.chartContainer.style.position = 'relative'

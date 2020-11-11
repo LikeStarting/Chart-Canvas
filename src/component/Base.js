@@ -100,6 +100,10 @@ export default class Base {
     }
   }
 
+  receiveEvent (type, value) {
+
+  }
+
   redraw (callback) {
     if (callback) {
       callback()

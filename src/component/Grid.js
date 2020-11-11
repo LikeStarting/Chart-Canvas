@@ -100,6 +100,10 @@ class Grid extends Base {
     if (style.dashArray) ctx.setLineDash(style.dashArray)
   }
 
+  receiveEvent (type, value) {
+
+  }
+
   draw () {
     this.initContainer()
     this.initCanvas()
