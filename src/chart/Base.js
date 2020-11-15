@@ -9,7 +9,6 @@ class ChartBase {
     this.options = options
     this.initContainer()
     this.initEvent()
-    this.updateScale()
     this.updateData().then(() => {
       this.draw()
     })
@@ -29,11 +28,12 @@ class ChartBase {
     // })
   }
 
-  updateData () {
+  updateData (offsetX) {
     return new Promise((resolve, reject) => {
-      this.data.getRenderTimeSeries(this.config.chartWidth, this.config.style.tickWidth)
+      this.data.getRenderTimeSeries(this.config.chartWidth, this.config.style.tickWidth, offsetX)
         .then((d) => {
           this._renderTimeSeries = d
+          this.updateScale()
 
           if (!this.components) {
             this.initComponents()

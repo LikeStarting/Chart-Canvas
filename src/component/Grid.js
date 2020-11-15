@@ -128,7 +128,24 @@ class Grid extends Base {
   }
 
   update () {
+    this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
+    this.updateData()
 
+    this.ctx.save()
+
+    this.drawBorder()
+
+    if (this.config.horizontal.display) {
+      this.setLineStyle(this.ctx, this.config.horizontal)
+      this.drawHorizontalLine(this.getHorizontalPoints(this.hTicks))
+    }
+
+    if (this.config.vertical.display) {
+      this.setLineStyle(this.ctx, this.config.vertical)
+      this.drawVerticalLine(this.getVerticalPoints(this.vTicks))
+    }
+
+    this.ctx.restore()
   }
 }
 

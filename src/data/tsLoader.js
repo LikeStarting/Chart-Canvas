@@ -10,6 +10,7 @@ class TSLoader {
     this.initPrices(prices)
     this.setTimeSeries(timeSeries)
 
+    this.offsetBarNumber = 0
     this.startIndex = 0
     this.endIndex = 0
   }
@@ -38,11 +39,25 @@ class TSLoader {
     this._holidays = holidays.sort((a, b) => a > b ? 1 : -1)
   }
 
-  async getRenderTimeSeries (width, tickWidth) {
-    const length = Math.floor(width / tickWidth)
-    this.endIndex = this.prices.length
-    this.startIndex = this.endIndex - length
+  async getRenderTimeSeries (width, tickWidth, offsetX) {
+    const length = this.prices.length
+    const counts = width / tickWidth
+    const minOffsetBarNumber = counts - length
+    const x = offsetX === undefined ? 0 : offsetX
 
+    this.offsetBarNumber = this.offsetBarNumber - x / tickWidth
+
+    if (this.offsetBarNumber < minOffsetBarNumber) {
+      this.offsetBarNumber = minOffsetBarNumber
+    }
+
+    this.endIndex = Math.round(length + this.offsetBarNumber)
+
+    if (this.endIndex > length) this.endIndex = length
+
+    this.startIndex = this.endIndex - counts
+
+    if (this.startIndex < 0) this.startIndex = 0
     const result = await this.sliceTimeSeries(this.startIndex, this.endIndex)
 
     return result

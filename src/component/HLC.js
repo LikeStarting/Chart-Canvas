@@ -66,10 +66,29 @@ class HLC extends Base {
     this.initContainer()
     this.initCanvas()
 
+    this.ctx.save()
+
     this.drawBorder()
 
     this.drawBars(this.genBars(this.upBars), this.config.style.upColor)
     this.drawBars(this.genBars(this.downBars), this.config.style.downColor)
+
+    this.ctx.restore()
+  }
+
+  update () {
+    this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
+
+    this.updateData()
+
+    this.ctx.save()
+
+    this.drawBorder()
+
+    this.drawBars(this.genBars(this.upBars), this.config.style.upColor)
+    this.drawBars(this.genBars(this.downBars), this.config.style.downColor)
+
+    this.ctx.restore()
   }
 }
 

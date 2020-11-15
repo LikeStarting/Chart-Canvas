@@ -81,7 +81,6 @@ export default class Axis extends Base {
 
     yTicks.forEach(tick => {
       const y = this.config.height - yScale(tick) + correct
-      // console.log('y----', y, tick, yScale(tick))
       yPoints.push({
         start: { x: 0, y },
         end: { x: tickLineLength, y }
@@ -237,6 +236,25 @@ export default class Axis extends Base {
   }
 
   update () {
+    this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
 
+    this.updateData()
+    this.ctx.save()
+
+    this.drawBorder()
+
+    if (this.config.locate === 'top' || this.config.locate === 'bottom') {
+      this.drawXLine()
+      this.drawTicks(this.genXPoints(this.xTicks))
+      this.drawText(this.genTextPoints(this.xTicks))
+    }
+
+    if (this.config.locate === 'left' || this.config.locate === 'right') {
+      this.drawYLine()
+      this.drawTicks(this.genYPoints(this.yTicks))
+      this.drawYText(this.genYTextPoints(this.yTicks))
+    }
+
+    this.ctx.restore()
   }
 }

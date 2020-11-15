@@ -49,26 +49,6 @@ export default class Base {
     this.ctx.scale(pixelRadio, pixelRadio)
   }
 
-  drawLine (start, end) {
-    this.ctx.beginPath()
-    this.ctx.moveTo(start.x, start.y)
-    this.ctx.lineTo(end.x, end.y)
-    this.ctx.stroke()
-    this.ctx.closePath()
-  }
-
-  drawBorder () {
-    for (const [k, v] of Object.entries(this.config.border)) {
-      if (v.display) {
-        this.ctx.lineWidth = v.lineWidth
-        this.ctx.strokeStyle = v.lineColor
-        if (v.dashArray) this.ctx.setLineDash(v.dashArray)
-        const { start, end } = this.getBorderPoints(k)
-        this.drawLine(start, end)
-      }
-    }
-  }
-
   getBorderPoints (orientation) {
     const { top, right, bottom, left } = this.config.coordinate
 
@@ -100,11 +80,34 @@ export default class Base {
     }
   }
 
+  drawLine (start, end) {
+    this.ctx.beginPath()
+    this.ctx.moveTo(start.x, start.y)
+    this.ctx.lineTo(end.x, end.y)
+    this.ctx.stroke()
+    this.ctx.closePath()
+  }
+
+  drawBorder () {
+    if (!this.config.border || Object.keys(this.config.border).length === 0) return
+
+    for (const [k, v] of Object.entries(this.config.border)) {
+      if (v.display) {
+        this.ctx.lineWidth = v.lineWidth
+        this.ctx.strokeStyle = v.lineColor
+        if (v.dashArray) this.ctx.setLineDash(v.dashArray)
+        const { start, end } = this.getBorderPoints(k)
+        this.drawLine(start, end)
+      }
+    }
+  }
+
   receiveEvent (type, value) {
 
   }
 
   redraw (callback) {
+    this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
     if (callback) {
       callback()
     }

@@ -2,11 +2,13 @@ import { EventType } from '../config/Constant'
 
 class Event {
   initEvent () {
-    this.container.addEventListener('mouseenter', this.mouseEnterHandler.bind(this))
-    this.container.addEventListener('mousedown', this.mouseDownHandler.bind(this))
-    // this.container.addEventListener('mousemove', this.mouseMoveHandler.bind(this))
-    this.container.addEventListener('mouseleave', this.mouseLeaveHandler.bind(this))
-    this.container.addEventListener('touchmove', this.touchMoveHandler.bind(this))
+    this._mouseWidthDown = false
+
+    this.chartContainer.addEventListener('mouseenter', this.mouseEnterHandler.bind(this))
+    this.chartContainer.addEventListener('mousedown', this.mouseDownHandler.bind(this))
+    this.chartContainer.addEventListener('mousemove', this.mouseMoveHandler.bind(this))
+    this.chartContainer.addEventListener('mouseleave', this.mouseLeaveHandler.bind(this))
+    this.chartContainer.addEventListener('touchmove', this.touchMoveHandler.bind(this))
   }
 
   mouseEnterHandler (event) {
@@ -19,23 +21,48 @@ class Event {
   }
 
   mouseDownHandler (event) {
-    const mouseMoveHandler = this.mouseMoveHandler.bind(this)
+    console.warn('mouse down')
+    this._mouseWidthDown = true
+    this.startScrollPoint = {
+      x: event.offsetX,
+      y: event.offsetY
+    }
+    const mouseMoveWidthDownHandler = this.mouseMoveWidthDownHandler.bind(this)
     const mouseUpHandler = this.mouseUpHandler.bind(this)
     this.unsubscribeEvent = () => {
-      this.container.removeEventListener('mousemove', mouseMoveHandler)
-      this.container.removeEventListener('mouseup', mouseUpHandler)
+      this.chartContainer.removeEventListener('mouseup', mouseUpHandler)
+      this.chartContainer.removeEventListener('mousemove', mouseMoveWidthDownHandler)
     }
-    this.container.addEventListener('mousemove', mouseMoveHandler)
-    this.container.addEventListener('mouseup', mouseUpHandler)
+    this.chartContainer.addEventListener('mouseup', mouseUpHandler)
+    this.chartContainer.addEventListener('mousemove', mouseMoveWidthDownHandler)
   }
 
   mouseUpHandler () {
+    this._mouseWidthDown = false
     this.unsubscribeEvent()
   }
 
   mouseMoveHandler (event) {
+    if (this._mouseWidthDown) return
+    console.warn('mouse move')
+
     const eventValue = this.getEventValue(event)
     this.subscribe(EventType.MOUSE_MOVE, eventValue)
+  }
+
+  mouseMoveWidthDownHandler (event) {
+    console.warn('move with mouse down')
+    const offsetX = event.offsetX - this.startScrollPoint.x
+
+    this.updateData(offsetX).then(d => {
+      this.components.forEach(c => {
+        try {
+          c.update()
+        } catch (e) {
+          console.error(e)
+        }
+      })
+    })
   }
 
   mouseLeaveHandler (event) {
@@ -47,7 +74,7 @@ class Event {
   }
 
   touchMoveHandler (event) {
-    console.log('event', event)
+
   }
 
   touchEndHandler (event) {
@@ -55,9 +82,17 @@ class Event {
   }
 
   getEventValue (event) {
-    const val = null
+    let val = null
 
+    val = {
+      x: event.offsetX
+
+    }
     return val
+  }
+
+  scaleReverse (position) {
+
   }
 
   subscribe (eventType, value) {
