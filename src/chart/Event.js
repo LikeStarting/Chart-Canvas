@@ -85,8 +85,8 @@ class Event {
     let val = null
 
     val = {
-      x: event.offsetX
-
+      x: event.offsetX,
+      y: event.offsetY
     }
     return val
   }

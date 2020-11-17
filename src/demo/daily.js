@@ -220,6 +220,17 @@ const options = {
         tickBarWidth: 4,
         lineWidth: 2
       }
+    },
+    {
+      type: 'crosshair',
+      style: {
+        lineColor: 'rgb(39, 54, 233)'
+        // lineStyle: 'no-cursor',
+      },
+      position: {
+        height: heightPrice + heightVolume,
+        bottom: heightAxis
+      }
     }
     // {
     //   type: 'line',

@@ -18,13 +18,17 @@ import HLCConfig from './HLCConfig'
 import Candlestick from '../component/Candlestick'
 import CandlestickConfig from './CandlestickConfig'
 
+import Crosshair from '../component/Crosshair'
+import CrosshairConfig from './CrosshairConfig'
+
 const componentRegister = {
   [ChartType.GRID]: [Grid, GridConfig],
   [ChartType.AXIS]: [Axis, AxisConfig],
   [ChartType.Line]: [Line, LineConfig],
   [ChartType.BAR]: [Bar, BarConfig],
   [ChartType.HLC]: [HLC, HLCConfig],
-  [ChartType.CANDLESTICK]: [Candlestick, CandlestickConfig]
+  [ChartType.CANDLESTICK]: [Candlestick, CandlestickConfig],
+  [ChartType.CROSSHAIR]: [Crosshair, CrosshairConfig]
 }
 
 export function createComponent (data, config) {
