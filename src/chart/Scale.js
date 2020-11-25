@@ -11,7 +11,11 @@ class Scale {
   updateScale () {
     const { prices } = this.renderTimeSeries
     const [rangeLeft, rangeRight] = this.getScaleRange()
-    this.xScale = scaleX.createScale(prices, rangeLeft, rangeRight)
+    const { domain, scalePoints, xScale } = scaleX.createScale(prices, rangeLeft, rangeRight)
+
+    this.xScale = xScale
+    this.domain = domain
+    this.scalePoints = scalePoints
   }
 }
 

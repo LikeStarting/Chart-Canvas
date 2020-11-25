@@ -13,6 +13,9 @@ class Crosshair extends Base {
 
   receiveEvent (type, value) {
     switch (type) {
+      case EventType.MOUSE_DOWN:
+        this.onMouseDown(value)
+        break
       case EventType.MOUSE_MOVE:
         this.onMouseMove(value)
         break
@@ -24,13 +27,40 @@ class Crosshair extends Base {
     }
   }
 
+  onMouseDown (value) {
+    // this.chart.chartContainer.style.cursor = 'pointer'
+  }
+
   onMouseMove (value) {
+    const { hoverDate, x, y } = value
+    const isShow = this.checkMouseMove(x, y)
+    if (!isShow) {
+      this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
+      return
+    }
+
+    const { prices } = this.renderTimeSeries
+    if (hoverDate) {
+      const price = prices.find(p => p.date.valueOf() === hoverDate.valueOf())
+      // console.log('---', price, hoverDate)
+    }
+
+    this.chart.chartContainer.style.cursor = 'crosshair'
     this.updatePosition(value)
-    this.update()
+    this.updateCrosshair()
   }
 
   onMouseLeave () {
     this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
+  }
+
+  checkMouseMove (x, y) {
+    const { left, right, top, bottom } = this.config.coordinate
+
+    if (x <= left || x >= right) return false
+    if (y <= top || y >= bottom) return false
+
+    return true
   }
 
   updatePosition (pos) {
@@ -64,6 +94,15 @@ class Crosshair extends Base {
     }
   }
 
+  updateCrosshair () {
+    this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
+    this.ctx.save()
+
+    this.drawCrosshair(this.pos)
+
+    this.ctx.restore()
+  }
+
   draw () {
     this.initContainer()
     this.initCanvas()
@@ -77,11 +116,7 @@ class Crosshair extends Base {
 
   update () {
     this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
-    this.ctx.save()
-
-    this.drawCrosshair(this.pos)
-
-    this.ctx.restore()
+    this.chart.chartContainer.style.cursor = 'pointer'
   }
 }
 

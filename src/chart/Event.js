@@ -6,7 +6,7 @@ class Event {
 
     this.chartContainer.addEventListener('mouseenter', this.mouseEnterHandler.bind(this))
     this.chartContainer.addEventListener('mousedown', this.mouseDownHandler.bind(this))
-    this.chartContainer.addEventListener('mousemove', this.mouseMoveHandler.bind(this))
+    this.chartContainer.addEventListener('mousemove', this.mouseMoveHandler.bind(this), true)
     this.chartContainer.addEventListener('mouseleave', this.mouseLeaveHandler.bind(this))
     this.chartContainer.addEventListener('touchmove', this.touchMoveHandler.bind(this))
   }
@@ -14,8 +14,8 @@ class Event {
   mouseEnterHandler (event) {
     const eventValue = this.getEventValue(event)
     this.moveStartPosition = {
-      x: event.pageX,
-      y: event.pageY
+      x: event.offsetX,
+      y: event.offsetY
     }
     this.subscribe(EventType.MOUSE_ENTER, eventValue)
   }
@@ -27,6 +27,9 @@ class Event {
       x: event.offsetX,
       y: event.offsetY
     }
+
+    this.subscribe(EventType.MOUSE_DOWN, null)
+
     const mouseMoveWidthDownHandler = this.mouseMoveWidthDownHandler.bind(this)
     const mouseUpHandler = this.mouseUpHandler.bind(this)
     this.unsubscribeEvent = () => {
@@ -45,7 +48,6 @@ class Event {
   mouseMoveHandler (event) {
     if (this._mouseWidthDown) return
     console.warn('mouse move')
-
     const eventValue = this.getEventValue(event)
     this.subscribe(EventType.MOUSE_MOVE, eventValue)
   }
@@ -83,16 +85,29 @@ class Event {
 
   getEventValue (event) {
     let val = null
+    let hoverDate = null
 
     val = {
+      event,
       x: event.offsetX,
       y: event.offsetY
     }
+
+    if (this.scalePoints) {
+      hoverDate = this.scaleReverse(val.x)
+    }
+    val.hoverDate = hoverDate
     return val
   }
 
   scaleReverse (position) {
+    let val = null
+    const { domain, scalePoints } = this
 
+    const index = scalePoints.findIndex(p => p === position)
+
+    val = domain[index]
+    return val
   }
 
   subscribe (eventType, value) {

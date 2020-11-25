@@ -20,6 +20,7 @@ export default class Base {
     this.componentContainer = document.createElement('div')
     this.componentContainer.id = this.config.id
     this.componentContainer.userSelect = 'none'
+    this.componentContainer.style.pointerEvents = 'none'
     this.componentContainer.style.position = 'absolute'
     this.componentContainer.style.top = this.config.position.top + 'px'
     this.componentContainer.style.left = this.config.position.left + 'px'
@@ -33,6 +34,7 @@ export default class Base {
     this.canvas.style.position = 'absolute'
     this.canvas.style.top = 0
     this.canvas.style.left = 0
+    this.canvas.style.pointerEvents = 'none'
     this.ctx = this.canvas.getContext('2d')
     this.componentContainer.appendChild(this.canvas)
     this.setCanvasSize()

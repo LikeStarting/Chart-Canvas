@@ -54,7 +54,8 @@ export const EventType = Object.freeze({
   MOUSE_ENTER: 1,
   MOUSE_MOVE: 2,
   MOUSE_LEAVE: 3,
-  TOUCH_START: 4,
-  TOUCH_MOVE: 5,
-  TOUCH_END: 6
+  MOUSE_DOWN: 4,
+  TOUCH_START: 5,
+  TOUCH_MOVE: 6,
+  TOUCH_END: 7
 })

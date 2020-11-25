@@ -185,7 +185,7 @@ export default class Axis extends Base {
     this.ctx.textAlign = textAlign
     this.ctx.textBaseline = textVerticalAlign
 
-    const format = (d) => `${d.getMonth() + 1}-${d.getFullYear() % 100}`
+    const format = (d) => `${d.getMonth() + 1}/${d.getFullYear() % 100}`
 
     xTicks.forEach((tick, i) => {
       if (!xTicks[i + 1] && (textAlign === 'center' || textAlign === 'right')) {
