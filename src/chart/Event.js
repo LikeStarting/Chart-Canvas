@@ -53,13 +53,17 @@ class Event {
   }
 
   mouseMoveWidthDownHandler (event) {
+    if (!this._mouseWidthDown) return
     console.warn('move with mouse down')
     const offsetX = event.offsetX - this.startScrollPoint.x
+
+    this.startScrollPoint.x = event.offsetX
+    this.startScrollPoint.y = event.offsetY
 
     this.updateData(offsetX).then(d => {
       this.components.forEach(c => {
         try {
-          c.update()
+          c.update(offsetX)
         } catch (e) {
           console.error(e)
         }
@@ -68,6 +72,7 @@ class Event {
   }
 
   mouseLeaveHandler (event) {
+    this._mouseWidthDown = false
     this.subscribe(EventType.MOUSE_LEAVE, null)
   }
 

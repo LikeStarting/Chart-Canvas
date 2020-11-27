@@ -3,6 +3,12 @@ import scaleY from '../scale/ScaleY'
 import scaleX from '../scale/ScaleX'
 
 class Bar extends Base {
+  constructor (data, config) {
+    super(data, config)
+
+    this.transfrom = { x: 0, y: 0 }
+  }
+
   updateData () {
     const d = this.renderTimeSeries
 
@@ -24,7 +30,7 @@ class Bar extends Base {
   }
 
   genBars (bars) {
-    const { xScale, yScale } = this
+    const { xScale, yScale, transfrom } = this
     const pointBars = []
 
     const { lineWidth } = this.config.style
@@ -32,7 +38,7 @@ class Bar extends Base {
 
     bars.forEach(bar => {
       pointBars.push({
-        x: xScale(bar.date) + correct - lineWidth / 2,
+        x: xScale(bar.date) + correct - lineWidth / 2 + transfrom.x,
         y: this.config.height - yScale(bar.volume)
       })
     })
@@ -66,7 +72,8 @@ class Bar extends Base {
     this.ctx.restore()
   }
 
-  update () {
+  update (offsetX) {
+    this.transfrom.x = offsetX
     this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
     this.updateData()
 

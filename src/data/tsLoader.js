@@ -11,8 +11,8 @@ class TSLoader {
     this.setTimeSeries(timeSeries)
 
     this.offsetBarNumber = 0
-    this.startIndex = 0
-    this.endIndex = 0
+    this.startIndex = -1
+    this.endIndex = -1
   }
 
   get holidays () {
@@ -45,18 +45,19 @@ class TSLoader {
     const minOffsetBarNumber = counts - length
     const x = offsetX === undefined ? 0 : offsetX
 
-    this.offsetBarNumber = this.offsetBarNumber - x / tickWidth
-
-    if (this.offsetBarNumber < minOffsetBarNumber) {
+    if (this.offsetBarNumber <= minOffsetBarNumber) {
       this.offsetBarNumber = minOffsetBarNumber
+    }
+
+    if (this.offsetBarNumber >= 0) {
+      this.offsetBarNumber = 0
     }
 
     this.endIndex = Math.round(length + this.offsetBarNumber)
 
     if (this.endIndex > length) this.endIndex = length
 
-    this.startIndex = this.endIndex - counts
-
+    this.startIndex = Math.floor(this.endIndex - counts)
     if (this.startIndex < 0) this.startIndex = 0
     const result = await this.sliceTimeSeries(this.startIndex, this.endIndex)
 

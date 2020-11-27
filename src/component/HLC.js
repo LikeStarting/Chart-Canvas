@@ -3,6 +3,12 @@ import Base from './Base'
 import scaleY from '../scale/ScaleY'
 
 class HLC extends Base {
+  constructor (data, config) {
+    super(data, config)
+
+    this.transfrom = { x: 0, y: 0 }
+  }
+
   updateData () {
     const d = this.renderTimeSeries
 
@@ -24,21 +30,21 @@ class HLC extends Base {
   }
 
   genBars (bars) {
-    const { xScale, yScale } = this
+    const { xScale, yScale, transfrom } = this
     const pointBars = []
 
     const { lineWidth, tickBarWidth } = this.config.style
     const correct = lineWidth % 2 === 0 ? 0 : 0.5
     bars.forEach(bar => {
       const highLowPoint = {
-        x: xScale(bar.date) + correct - lineWidth / 2,
+        x: xScale(bar.date) + correct - lineWidth / 2 + transfrom.x,
         y: this.config.height - yScale(bar.high),
         width: lineWidth,
         height: yScale(bar.high) - yScale(bar.low)
       }
       const closePoint = {
-        start: { x: xScale(bar.date) - tickBarWidth / 2, y: this.config.height - yScale(bar.close) + correct },
-        end: { x: xScale(bar.date) + tickBarWidth / 2, y: this.config.height - yScale(bar.close) + correct }
+        start: { x: xScale(bar.date) - tickBarWidth / 2 + transfrom.x, y: this.config.height - yScale(bar.close) + correct },
+        end: { x: xScale(bar.date) + tickBarWidth / 2 + transfrom.x, y: this.config.height - yScale(bar.close) + correct }
       }
       pointBars.push({
         highLowPoint,
@@ -76,7 +82,9 @@ class HLC extends Base {
     this.ctx.restore()
   }
 
-  update () {
+  update (offsetX) {
+    this.transfrom.x = offsetX
+
     this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
 
     this.updateData()

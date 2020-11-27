@@ -4,6 +4,12 @@ import tickY from '../scale/TickY'
 import scaleY from '../scale/ScaleY'
 
 class Grid extends Base {
+  constructor (data, config) {
+    super(data, config)
+
+    this.transfrom = { x: 0, y: 0 }
+  }
+
   updateData () {
     const d = this.renderTimeSeries
 
@@ -49,14 +55,14 @@ class Grid extends Base {
   }
 
   getVerticalPoints (vTicks) {
-    const { xScale } = this
+    const { xScale, transfrom } = this
     const verticalPoints = []
 
     const { top, bottom } = this.config.coordinate
     const correct = (this.config.vertical.lineWidth % 2 === 0) ? 0 : 0.5
 
     vTicks.forEach(date => {
-      const x = xScale(date) + correct
+      const x = xScale(date) + correct + transfrom.x
       verticalPoints.push({
         start: { x, y: top },
         end: { x, y: bottom }
@@ -127,7 +133,9 @@ class Grid extends Base {
     this.ctx.restore()
   }
 
-  update () {
+  update (offsetX) {
+    this.transfrom.x = offsetX
+
     this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
     this.updateData()
 

@@ -6,6 +6,12 @@ import scaleY from '../scale/ScaleY'
 import { formatNum } from '../utils/format'
 
 export default class Axis extends Base {
+  constructor (data, config) {
+    super(data, config)
+
+    this.transform = { x: 0, y: 0 }
+  }
+
   updateData () {
     const d = this.renderTimeSeries
 
@@ -59,12 +65,12 @@ export default class Axis extends Base {
   }
 
   genXPoints (xTicks) {
-    const { xScale } = this
+    const { xScale, transform } = this
     const xPoints = []
     const { tickLineWidth, tickLineLength } = this.config.style
     const correct = (tickLineWidth % 2 === 0) ? 0 : 0.5
     xTicks.forEach(tick => {
-      const x = xScale(tick) + correct
+      const x = xScale(tick) + correct + transform.x
       xPoints.push({
         start: { x, y: 0 },
         end: { x, y: tickLineLength }
@@ -90,13 +96,13 @@ export default class Axis extends Base {
   }
 
   genTextPoints (xTicks) {
-    const { xScale } = this
+    const { xScale, transform } = this
     const { lineWidth, tickLineWidth, textPadding, textAlign, textVerticalAlign } = this.config.style
     const [top, right, bottom, left] = textPadding
     const correct = (tickLineWidth % 2 === 0) ? 0 : 0.5
 
     const textPoints = xTicks.map((tick, i) => {
-      let x = xScale(tick) + left + tickLineWidth + correct
+      let x = xScale(tick) + left + tickLineWidth + correct + transform.x
       if (xTicks[i + 1] && textAlign === 'center') {
         const nextX = xScale(xTicks[i + 1]) - right + correct
         x = x + (nextX - x) / 2
@@ -235,7 +241,9 @@ export default class Axis extends Base {
     this.ctx.restore()
   }
 
-  update () {
+  update (offsetX) {
+    this.transform.x = offsetX
+
     this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
 
     this.updateData()

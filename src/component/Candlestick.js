@@ -2,7 +2,7 @@ import HLC from './HLC'
 
 class Candlestick extends HLC {
   genBars (bars) {
-    const { xScale, yScale } = this
+    const { xScale, yScale, transfrom } = this
     const pointBars = []
 
     const { lineWidth, tickBarWidth } = this.config.style
@@ -10,20 +10,20 @@ class Candlestick extends HLC {
 
     bars.forEach(bar => {
       const openClosePoint = {
-        x: xScale(bar.date) - tickBarWidth / 2 + 0.5,
+        x: xScale(bar.date) - tickBarWidth / 2 + 0.5 + transfrom.x,
         y: null,
         width: tickBarWidth - 1,
         height: null
       }
 
       const topLinePoint = {
-        start: { x: xScale(bar.date) + correct, y: this.config.height - yScale(bar.high) },
-        end: { x: xScale(bar.date) + correct, y: null }
+        start: { x: xScale(bar.date) + correct + transfrom.x, y: this.config.height - yScale(bar.high) },
+        end: { x: xScale(bar.date) + correct + transfrom.x, y: null }
       }
 
       const bottomLinePoint = {
-        start: { x: xScale(bar.date) + correct, y: null },
-        end: { x: xScale(bar.date) + correct, y: this.config.height - yScale(bar.low) }
+        start: { x: xScale(bar.date) + correct + transfrom.x, y: null },
+        end: { x: xScale(bar.date) + correct + transfrom.x, y: this.config.height - yScale(bar.low) }
       }
 
       if (bar.open > bar.close) {
@@ -79,7 +79,9 @@ class Candlestick extends HLC {
     this.ctx.restore()
   }
 
-  update () {
+  update (offsetX) {
+    this.transfrom.x = offsetX
+
     this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
 
     this.updateData()
