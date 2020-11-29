@@ -71,12 +71,12 @@ class ScaleY {
   getValueDomain (timeSeries, scaleConfig) {
     let minVal
     let maxVal
+    const { current } = timeSeries
 
     const isLegal = v => v !== null && typeof v !== 'undefined'
 
     if (scaleConfig.value) {
-      const ts = timeSeries[scaleConfig.value].filter(data => isLegal(data.value))
-
+      const ts = timeSeries[scaleConfig.value].filter(data => data.date >= current.startDate.valueOf() && data.date < current.endDate.valueOf() && isLegal(data.value))
       for (const v of ts) {
         if (minVal === undefined || minVal > v.value) {
           minVal = v.value
@@ -86,8 +86,7 @@ class ScaleY {
         }
       }
     } else {
-      const ts = timeSeries.prices.filter(p => isLegal(p.close) && isLegal(p.high) && isLegal(p.low))
-
+      const ts = timeSeries.prices.filter(p => p.date >= current.startDate.valueOf() && p.date < current.endDate.valueOf() && isLegal(p.close) && isLegal(p.high) && isLegal(p.low))
       for (const v of ts) {
         if (minVal === undefined || minVal > v.low) {
           minVal = v.low

@@ -106,12 +106,6 @@ class Crosshair extends Base {
   draw () {
     this.initContainer()
     this.initCanvas()
-
-    this.ctx.save()
-
-    this.drawCrosshair(this.pos)
-
-    this.ctx.restore()
   }
 
   update () {

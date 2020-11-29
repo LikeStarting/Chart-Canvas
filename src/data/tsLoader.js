@@ -41,25 +41,29 @@ class TSLoader {
 
   async getRenderTimeSeries (width, tickWidth, offsetX) {
     const length = this.prices.length
-    const counts = width / tickWidth
-    const minOffsetBarNumber = counts - length
-    const x = offsetX === undefined ? 0 : offsetX
+    const counts = width * 3 / tickWidth
+    const maxOffsetBarNumber = length - counts
 
-    if (this.offsetBarNumber <= minOffsetBarNumber) {
-      this.offsetBarNumber = minOffsetBarNumber
+    const x = offsetX === undefined ? 0 : offsetX
+    this.offsetBarNumber = x / tickWidth
+
+    if (this.offsetBarNumber > maxOffsetBarNumber) {
+      this.offsetBarNumber = maxOffsetBarNumber
     }
 
-    if (this.offsetBarNumber >= 0) {
+    if (this.offsetBarNumber < 0) {
       this.offsetBarNumber = 0
     }
 
-    this.endIndex = Math.round(length + this.offsetBarNumber)
+    this.endIndex = Math.round(length - this.offsetBarNumber)
 
     if (this.endIndex > length) this.endIndex = length
 
     this.startIndex = Math.floor(this.endIndex - counts)
     if (this.startIndex < 0) this.startIndex = 0
     const result = await this.sliceTimeSeries(this.startIndex, this.endIndex)
+
+    result.current = this.setCurrentRange(width, tickWidth, x)
 
     return result
   }
@@ -73,6 +77,7 @@ class TSLoader {
       value: ts.volume
     }))
 
+    this.setPrices(renderPrices)
     return result
   }
 
@@ -108,6 +113,30 @@ class TSLoader {
     this.calcHighLow(prices)
 
     this._prices = prices
+  }
+
+  setCurrentRange (width, tickWidth, offsetX) {
+    const length = this.prices.length
+    const totalWidth = length * tickWidth
+    let left = totalWidth - width - offsetX
+
+    left = left >= 0 ? left : 0
+    let right = left + width
+    right = right <= totalWidth ? right : totalWidth
+
+    let endIndex = Math.floor(right / tickWidth)
+    endIndex = endIndex < length ? endIndex : length - 1
+
+    let startIndex = Math.floor(left / tickWidth)
+    startIndex = startIndex < length ? startIndex : length - 1
+
+    const startDate = this.prices[startIndex].date
+    const endDate = this.prices[endIndex].date
+
+    return {
+      startDate,
+      endDate
+    }
   }
 
   setViewPrices (_prices) {

@@ -3,6 +3,8 @@ import { EventType } from '../config/Constant'
 class Event {
   initEvent () {
     this._mouseWidthDown = false
+    this.offsetX = 0
+    this.x = 0
 
     this.chartContainer.addEventListener('mouseenter', this.mouseEnterHandler.bind(this))
     this.chartContainer.addEventListener('mousedown', this.mouseDownHandler.bind(this))
@@ -40,9 +42,10 @@ class Event {
     this.chartContainer.addEventListener('mousemove', mouseMoveWidthDownHandler)
   }
 
-  mouseUpHandler () {
+  mouseUpHandler (event) {
     this._mouseWidthDown = false
     this.unsubscribeEvent()
+    this.x += this.offsetX
   }
 
   mouseMoveHandler (event) {
@@ -56,14 +59,17 @@ class Event {
     if (!this._mouseWidthDown) return
     console.warn('move with mouse down')
     const offsetX = event.offsetX - this.startScrollPoint.x
+    const x = this.x + offsetX
+    const minOffsetX = 0
+    const maxOffsetX = this.renderTimeSeries.prices.length * this.config.style.tickWidth - this.config.chartWidth
+    if (x < minOffsetX || x > maxOffsetX) return
 
-    this.startScrollPoint.x = event.offsetX
-    this.startScrollPoint.y = event.offsetY
+    this.offsetX = offsetX
 
-    this.updateData(offsetX).then(d => {
+    this.updateData(x).then(d => {
       this.components.forEach(c => {
         try {
-          c.update(offsetX)
+          c.update(x)
         } catch (e) {
           console.error(e)
         }
@@ -99,7 +105,7 @@ class Event {
     }
 
     if (this.scalePoints) {
-      hoverDate = this.scaleReverse(val.x)
+      hoverDate = this.scaleReverse(val.x - parseInt(this.x, 10))
     }
     val.hoverDate = hoverDate
     return val
