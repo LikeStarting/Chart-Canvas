@@ -33,24 +33,34 @@ class Crosshair extends Base {
 
   onMouseMove (value) {
     const { hoverDate, x, y } = value
+
     const isShow = this.checkMouseMove(x, y)
     if (!isShow) {
+      this.tooltipNode.style.visibility = 'hidden'
       this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
       return
     }
 
-    const { prices } = this.renderTimeSeries
-    if (hoverDate) {
-      const price = prices.find(p => p.date.valueOf() === hoverDate.valueOf())
-      // console.log('---', price, hoverDate)
-    }
-
     this.chart.chartContainer.style.cursor = 'crosshair'
     this.updatePosition(value)
+
+    if (!hoverDate) return
+
     this.updateCrosshair()
+
+    const { prices } = this.renderTimeSeries
+    const price = prices.find(p => p.date.valueOf() === hoverDate.valueOf())
+
+    if (price && price.close) {
+      const tooltip = this.config.tooltip({ chart: this.chart, price })
+      this.updateTooltip(tooltip, value)
+    } else {
+      this.tooltipNode.style.visibility = 'hidden'
+    }
   }
 
   onMouseLeave () {
+    this.tooltipNode.style.visibility = 'hidden'
     this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
   }
 
@@ -103,9 +113,29 @@ class Crosshair extends Base {
     this.ctx.restore()
   }
 
+  drawTooltip () {
+    const node = document.createElement('div')
+    node.style.position = 'absolute'
+    node.style.left = 0
+    node.style.top = 0
+    node.style.opacity = this.config.style.tooltipOpacity
+    this.tooltipNode = node
+    this.componentContainer.appendChild(node)
+  }
+
+  updateTooltip (html, position) {
+    this.tooltipNode.style.visibility = 'visible'
+    this.tooltipNode.innerHTML = html
+
+    this.tooltipNode.style.left = position.x + 5 + 'px'
+    this.tooltipNode.style.top = position.y + 5 + 'px'
+  }
+
   draw () {
     this.initContainer()
     this.initCanvas()
+
+    this.drawTooltip()
   }
 
   update () {
