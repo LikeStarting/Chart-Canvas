@@ -50,7 +50,6 @@ class Crosshair extends Base {
     if (!hoverDate) return
     this.chart.chartContainer.style.cursor = 'crosshair'
     const adjustValue = this.xScale(hoverDate) + this.transform.x
-    // console.log('transform--------', hoverDate, this.xScale(hoverDate), this.transform.x)
     this.updatePosition({
       x: adjustValue,
       y

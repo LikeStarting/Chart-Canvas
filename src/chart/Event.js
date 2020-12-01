@@ -34,15 +34,27 @@ class Event {
 
     const mouseMoveWidthDownHandler = this.mouseMoveWidthDownHandler.bind(this)
     const mouseUpHandler = this.mouseUpHandler.bind(this)
+    const mouseLeaveWidthDownHandler = this.mouseLeaveWidthDownHandler.bind(this)
     this.unsubscribeEvent = () => {
       this.chartContainer.removeEventListener('mouseup', mouseUpHandler)
+      this.chartContainer.removeEventListener('mouseleave', mouseLeaveWidthDownHandler)
       this.chartContainer.removeEventListener('mousemove', mouseMoveWidthDownHandler)
     }
     this.chartContainer.addEventListener('mouseup', mouseUpHandler)
+    this.chartContainer.addEventListener('mouseleave', mouseLeaveWidthDownHandler)
     this.chartContainer.addEventListener('mousemove', mouseMoveWidthDownHandler)
   }
 
   mouseUpHandler (event) {
+    this._mouseWidthDown = false
+    this.unsubscribeEvent()
+    this.x += this.offsetX
+
+    if (this.x < this.minOffsetX) this.x = this.minOffsetX
+    if (this.x > this.maxOffsetX) this.x = this.maxOffsetX
+  }
+
+  mouseLeaveWidthDownHandler (event) {
     this._mouseWidthDown = false
     this.unsubscribeEvent()
     this.x += this.offsetX
@@ -127,7 +139,6 @@ class Event {
     const index = scalePoints.findIndex(p => {
       return position >= p - tickWidth / 2 && position <= p + tickWidth / 2
     })
-    // console.log('position--------', position)
     val = domain[index]
     return val
   }
