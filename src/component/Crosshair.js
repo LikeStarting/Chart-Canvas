@@ -9,6 +9,10 @@ class Crosshair extends Base {
       x: 0,
       y: 0
     }
+    this.transform = {
+      x: 0,
+      y: 0
+    }
   }
 
   receiveEvent (type, value) {
@@ -28,7 +32,9 @@ class Crosshair extends Base {
   }
 
   onMouseDown (value) {
-    // this.chart.chartContainer.style.cursor = 'pointer'
+    this.chart.chartContainer.style.cursor = 'pointer'
+    this.tooltipNode.style.visibility = 'hidden'
+    this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
   }
 
   onMouseMove (value) {
@@ -41,10 +47,14 @@ class Crosshair extends Base {
       return
     }
 
-    this.chart.chartContainer.style.cursor = 'crosshair'
-    this.updatePosition(value)
-
     if (!hoverDate) return
+    this.chart.chartContainer.style.cursor = 'crosshair'
+    const adjustValue = this.xScale(hoverDate) + this.transform.x
+    // console.log('transform--------', hoverDate, this.xScale(hoverDate), this.transform.x)
+    this.updatePosition({
+      x: adjustValue,
+      y
+    })
 
     this.updateCrosshair()
 
@@ -53,7 +63,10 @@ class Crosshair extends Base {
 
     if (price && price.close) {
       const tooltip = this.config.tooltip({ chart: this.chart, price })
-      this.updateTooltip(tooltip, value)
+      this.updateTooltip(tooltip, {
+        x: adjustValue,
+        y
+      })
     } else {
       this.tooltipNode.style.visibility = 'hidden'
     }
@@ -138,7 +151,8 @@ class Crosshair extends Base {
     this.drawTooltip()
   }
 
-  update () {
+  update (x) {
+    this.transform.x = x
     this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
     this.chart.chartContainer.style.cursor = 'pointer'
   }

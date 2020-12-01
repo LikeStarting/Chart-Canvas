@@ -192,9 +192,9 @@ export default class Axis extends Base {
     this.ctx.textBaseline = textVerticalAlign
 
     const format = (d) => {
-      const month = d.getMonth() > 10 ? 1 : d.getMonth() + 1
+      const month = d.getMonth() > 10 ? 0 : d.getMonth() + 1
       const year = d.getMonth() > 10 ? d.getFullYear() + 1 : d.getFullYear()
-      return `${month}/${year}`
+      return `${month + 1}/${year}`
     }
 
     xTicks.forEach((tick, i) => {

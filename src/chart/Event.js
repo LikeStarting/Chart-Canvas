@@ -46,11 +46,15 @@ class Event {
     this._mouseWidthDown = false
     this.unsubscribeEvent()
     this.x += this.offsetX
+
+    if (this.x < this.minOffsetX) this.x = this.minOffsetX
+    if (this.x > this.maxOffsetX) this.x = this.maxOffsetX
   }
 
   mouseMoveHandler (event) {
     if (this._mouseWidthDown) return
     console.warn('mouse move')
+
     const eventValue = this.getEventValue(event)
     this.subscribe(EventType.MOUSE_MOVE, eventValue)
   }
@@ -60,9 +64,13 @@ class Event {
     console.warn('move with mouse down')
     const offsetX = event.offsetX - this.startScrollPoint.x
     const x = this.x + offsetX
+
     const minOffsetX = 0
     const maxOffsetX = this.renderTimeSeries.prices.length * this.config.style.tickWidth - this.config.chartWidth
-    if (x < minOffsetX || x > maxOffsetX) return
+    this.minOffsetX = minOffsetX
+    this.maxOffsetX = maxOffsetX
+
+    if (x < this.minOffsetX || x > this.maxOffsetX) return
 
     this.offsetX = offsetX
 
@@ -114,9 +122,12 @@ class Event {
   scaleReverse (position) {
     let val = null
     const { domain, scalePoints } = this
+    const { tickWidth } = this.config.style
 
-    const index = scalePoints.findIndex(p => p === position)
-
+    const index = scalePoints.findIndex(p => {
+      return position >= p - tickWidth / 2 && position <= p + tickWidth / 2
+    })
+    // console.log('position--------', position)
     val = domain[index]
     return val
   }
