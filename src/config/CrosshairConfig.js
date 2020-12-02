@@ -14,7 +14,9 @@ class CrosshairConfig extends BaseConfig {
       lineColor: style.lineColor || 'black',
       lineWidth: style.lineWidth || 1,
       dashArray: style.dashArray === 0 ? 0 : style.dashArray || [2, 2],
-      tooltipOpacity: style.tooltipOpacity || 0.7
+      tooltipOpacity: style.tooltipOpacity || 0.7,
+      tooltipOffsetX: style.tooltipOffsetX || 5,
+      tooltipOffsetY: style.tooltipOffsetY || 5
     }
   }
 
@@ -32,7 +34,7 @@ class CrosshairConfig extends BaseConfig {
       const style = `
         <style>
           #crosshair-tooltip {
-            width: 140px;
+            width: 170px;
             padding: 5px 0;
             background: #fff;
             border-radius: 5px;
@@ -53,7 +55,7 @@ class CrosshairConfig extends BaseConfig {
           }
           #crosshair-tooltip div span:last-child {
             padding-right: 0;
-            width: 80px
+            width: 110px
           }
         </style>
       `

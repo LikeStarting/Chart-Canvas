@@ -127,6 +127,7 @@ class Crosshair extends Base {
 
   drawTooltip () {
     const node = document.createElement('div')
+    node.id = 'tooltip_wrapper'
     node.style.position = 'absolute'
     node.style.left = 0
     node.style.top = 0
@@ -139,8 +140,35 @@ class Crosshair extends Base {
     this.tooltipNode.style.visibility = 'visible'
     this.tooltipNode.innerHTML = html
 
-    this.tooltipNode.style.left = position.x + 5 + 'px'
-    this.tooltipNode.style.top = position.y + 5 + 'px'
+    const element = document.getElementById(this.tooltipNode.id)
+    const width = element.offsetWidth
+    const height = element.offsetHeight
+
+    let x = position.x
+    let y = position.y
+    const { top, right, bottom, left } = this.config.coordinate
+    const { tooltipOffsetX, tooltipOffsetY } = this.config.style
+    const boundary = {
+      top,
+      right,
+      bottom,
+      left
+    }
+
+    if (y + tooltipOffsetY + height > boundary.bottom) {
+      y = y - tooltipOffsetY - height
+    } else {
+      y = y + tooltipOffsetY
+    }
+
+    if (x + tooltipOffsetX + width > boundary.right) {
+      x = x - tooltipOffsetX - width
+    } else {
+      x = x + tooltipOffsetX
+    }
+
+    this.tooltipNode.style.left = x + 'px'
+    this.tooltipNode.style.top = y + 'px'
   }
 
   draw () {
