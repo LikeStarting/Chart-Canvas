@@ -1,6 +1,6 @@
 class ScaleY {
   createScale (scaleConfig, timeSeries, top, bottom) {
-    let yScale = null
+    let scaleMap = null
     const { minVal, maxVal } = this.getValueDomain(timeSeries, scaleConfig)
 
     let domain = [minVal, maxVal]
@@ -12,26 +12,29 @@ class ScaleY {
 
     switch (scaleConfig.type) {
       case 'linear':
-        yScale = this.getScaleMap(scaleConfig, domain, range)
+        scaleMap = this.getScaleMap(scaleConfig, domain, range)
         break
       case 'log':
         if (scaleConfig.logBase < 1) domain = [maxVal, minVal]
-        yScale = this.getScaleMap(scaleConfig, domain, range, true)
+        scaleMap = this.getScaleMap(scaleConfig, domain, range, true)
         break
       case 'pow':
         if (scaleConfig.pow < 0) domain = [maxVal, minVal]
-        yScale = this.getScaleMap(scaleConfig, domain, range)
+        scaleMap = this.getScaleMap(scaleConfig, domain, range)
         break
       case 'auto':
-        yScale = this.getScaleMap(scaleConfig, domain, range)
+        scaleMap = this.getScaleMap(scaleConfig, domain, range)
         break
       default:
-        yScale = this.getScaleMap(scaleConfig, domain, range)
+        scaleMap = this.getScaleMap(scaleConfig, domain, range)
         break
     }
 
+    const { yScale, yScaleInvert } = scaleMap
+
     return {
       yScale,
+      yScaleInvert,
       minVal,
       maxVal
     }
@@ -39,32 +42,48 @@ class ScaleY {
 
   getScaleMap (scaleConfig, domain, range, clamp = false) {
     let transformer = null
+    let transformerInvert = null
     switch (scaleConfig.type) {
       case 'linear':
         transformer = (d) => d
+        transformerInvert = (d) => d
         break
       case 'log':
         transformer = (d) => Math.log(d) / Math.log(scaleConfig.logBase)
+        transformerInvert = (d) => Math.pow(scaleConfig.logBase, d)
         break
       case 'pow':
         transformer = (d) => Math.pow(d, scaleConfig.powExponent)
+        transformerInvert = (d) => Math.pow(scaleConfig.logBase, Math.log10(d) / scaleConfig.logBase)
         break
       case 'auto':
         transformer = (d) => Math.log10(d)
+        transformerInvert = (d) => Math.pow(10, d)
         break
       default:
         transformer = (d) => d
+        transformerInvert = (d) => d
         break
     }
 
     const k = (range[1] - range[0]) / (transformer(domain[1]) - transformer(domain[0]))
     const b = range[0] - k * transformer(domain[0])
 
-    return (x) => {
-      const result = Math.round(k * transformer(x) + b)
+    const yScale = (x) => {
+      const result = k * transformer(x) + b
       if (clamp && result > range[1]) return range[1]
       if (clamp && result < range[0]) return range[0]
       return result
+    }
+
+    const yScaleInvert = (y) => {
+      const v = transformerInvert((y - b) / k)
+      return v
+    }
+
+    return {
+      yScale,
+      yScaleInvert
     }
   }
 

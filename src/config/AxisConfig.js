@@ -9,6 +9,7 @@ class AxisConfig extends BaseConfig {
     this.locate = options.locate || 'bottom'
 
     this.style = this.getStyle(options.style)
+    this.label = this.getLabelConfig(options.label)
 
     if (this.locate === 'top' || this.locate === 'bottom') {
       this.tickIntervalX = TimeInterval[options.tickIntervalX]
@@ -38,6 +39,47 @@ class AxisConfig extends BaseConfig {
       textVerticalAlign: style.textVerticalAlign || 'middle',
       textPadding: style.textPadding || [0, 0, 0, 0]
       // textFormat: ''
+    }
+  }
+
+  getLabelConfig (label = {}) {
+    const horizontal = label.horizontal || {}
+    const vertical = label.vertical || {}
+
+    const defaultLabelX = {
+      display: true,
+      fontSize: 10,
+      fontWeight: 'normal',
+      fontFamily: 'calibri',
+      fontColor: '#fff',
+      textAlign: 'left',
+      padding: [2, 5, 2, 5],
+      backgroundColor: 'rgba(0,0,0,0.65)',
+      borderWidth: 0,
+      borderColor: '#000'
+    }
+    const defaultLabelY = {
+      display: true,
+      fontSize: 10,
+      fontWeight: 'normal',
+      fontFamily: 'calibri',
+      fontColor: '#fff',
+      textAlign: 'left',
+      padding: [5, 0, 5, 0],
+      backgroundColor: 'rgba(0,0,0,0.65)',
+      borderWidth: 0,
+      borderColor: '#000'
+    }
+
+    return {
+      horizontal: {
+        ...defaultLabelY,
+        ...horizontal
+      },
+      vertical: {
+        ...defaultLabelX,
+        ...vertical
+      }
     }
   }
 }

@@ -5,6 +5,8 @@ import tickY from '../scale/TickY'
 import scaleY from '../scale/ScaleY'
 import { formatNum } from '../utils/format'
 
+import { EventType } from '../config/Constant'
+
 export default class Axis extends Base {
   constructor (data, config) {
     super(data, config)
@@ -24,13 +26,14 @@ export default class Axis extends Base {
     }
 
     if (this.config.locate === 'left' || this.config.locate === 'right') {
-      const { yScale, minVal, maxVal } = scaleY.createScale(
+      const { yScale, yScaleInvert, minVal, maxVal } = scaleY.createScale(
         this.config.yScale,
         d,
         this.config.coordinate.top,
         this.config.coordinate.bottom
       )
       this.yScale = yScale
+      this.yScaleInvert = yScaleInvert
       this.minVal = minVal
       this.maxVal = maxVal
       this.yTicks = this.genYTicks()
@@ -218,6 +221,209 @@ export default class Axis extends Base {
 
       this.ctx.fillText(tick.v, tick.x, tick.y)
     })
+  }
+
+  receiveEvent (type, value) {
+    switch (type) {
+      case EventType.MOUSE_DOWN:
+        this.onMouseDown(value)
+        break
+      case EventType.MOUSE_MOVE:
+        this.onMouseMove(value)
+        break
+      case EventType.MOUSE_LEAVE:
+        this.onMouseLeave()
+        break
+      default:
+        break
+    }
+  }
+
+  onMouseDown (value) {
+    this.update(this.transform.x)
+  }
+
+  onMouseMove (value) {
+    const { hoverDate, x, y } = value
+
+    if (!this.checkMouseMove(x, y)) {
+      this.update(this.transform.x)
+      return
+    }
+
+    if (!hoverDate) return
+    const adjustValue = this.xScale(hoverDate) + this.transform.x
+
+    const { prices } = this.renderTimeSeries
+    const price = prices.find(p => p.date.valueOf() === hoverDate.valueOf())
+
+    // if (price && price.close) {
+    //   const tooltip = this.config.tooltip({ chart: this.chart, price })
+    //   this.updateTooltip(tooltip, {
+    //     x: adjustValue,
+    //     y
+    //   })
+    // }
+    const correct = this.config.style.tickLineWidth % 2 === 0 ? 0 : 0.5
+
+    const label = {
+      x: hoverDate,
+      y: this.yScaleInvert && this.yScaleInvert(this.config.position.top + this.config.height - y - correct)
+    }
+
+    this.updateLabels(label, {
+      x: adjustValue,
+      y
+    })
+  }
+
+  onMouseLeave () {
+    this.update(this.transform.x)
+  }
+
+  checkMouseMove (x, y) {
+    const { left, top } = this.config.position
+    const { width, height, locate } = this.config
+
+    let bool = false
+    switch (locate) {
+      case 'bottom':
+        if (x > left && x < left + width && y < top) {
+          bool = true
+        }
+        break
+      case 'right':
+        if (x < left && y > top && y < top + height) {
+          bool = true
+        }
+        break
+    }
+
+    return bool
+  }
+
+  drawXLabel (label, x) {
+    const { left: axisLeft, right: axisRight } = this.config.coordinate
+    const {
+      fontSize,
+      fontWeight,
+      fontFamily,
+      fontColor,
+      textAlign,
+      backgroundColor,
+      borderWidth,
+      borderColor
+    } = this.config.label.vertical
+    const [top, right, bottom, left] = this.config.label.vertical.padding
+
+    const format = (d) => {
+      const year = d.getFullYear()
+      const month = d.getMonth() + 1
+      const date = d.getDate()
+      return `${month.toString().padStart(2, '0')}/${date.toString().padStart(2, '0')}/${year}`
+    }
+
+    const text = format(label)
+    const textWidth = this.ctx.measureText(text).width
+    let labelX = x - textWidth / 2
+
+    if (labelX < axisLeft + left + borderWidth) {
+      labelX = axisLeft + left + borderWidth
+    } else if (labelX > axisRight - right - borderWidth - textWidth) {
+      labelX = axisRight - right - borderWidth - textWidth
+    }
+
+    const rectTop = 0
+    const rectBottom = fontSize + top + bottom + borderWidth * 2
+    const rectLeft = labelX - left - borderWidth
+    const rectRight = labelX + textWidth + right + borderWidth
+
+    this.ctx.fillStyle = backgroundColor
+    this.ctx.fillRect(rectLeft, rectTop, rectRight - rectLeft, rectBottom - rectTop)
+
+    if (borderWidth !== 0) {
+      this.ctx.lineWidth = borderWidth
+      this.ctx.strokeStyle = borderColor
+      this.ctx.strokeRect(rectLeft, rectTop, rectRight - rectLeft, rectBottom - rectTop)
+    }
+
+    this.ctx.textBaseline = 'top'
+    this.ctx.font = `${fontSize}px ${fontWeight} ${fontFamily}`
+    this.ctx.fillStyle = fontColor
+    this.ctx.textAlign = textAlign
+    this.ctx.fillText(text, labelX, borderWidth + top)
+  }
+
+  drawYLabel (label, y) {
+    const { tickLineLength } = this.config.style
+    const { top: axisTop, bottom: axisBottom, left: axisLeft, right: axisRight } = this.config.coordinate
+    const {
+      fontSize,
+      fontWeight,
+      fontFamily,
+      fontColor,
+      textAlign,
+      backgroundColor,
+      borderWidth,
+      borderColor
+    } = this.config.label.horizontal
+    const [top, right, bottom, left] = this.config.label.horizontal.padding
+
+    const format = (v) => {
+      return v.toFixed(4)
+    }
+
+    const text = format(label)
+    let labelY = y - fontSize / 2 - this.config.position.top
+
+    if (labelY < axisTop + top + borderWidth) {
+      labelY = axisTop + top + borderWidth
+    } else if (labelY > axisBottom - bottom - borderWidth) {
+      labelY = axisBottom - bottom - borderWidth
+    }
+
+    const rectTop = labelY - top - borderWidth
+    const rectBottom = labelY + fontSize + bottom + borderWidth
+    const rectLeft = axisLeft
+    const rectRight = axisRight
+
+    this.ctx.fillStyle = backgroundColor
+    this.ctx.fillRect(rectLeft, rectTop, rectRight - rectLeft, rectBottom - rectTop)
+
+    if (borderWidth !== 0) {
+      this.ctx.lineWidth = borderWidth
+      this.ctx.strokeStyle = borderColor
+      this.ctx.strokeRect(rectLeft, rectTop, rectRight - rectLeft, rectBottom - rectTop)
+    }
+
+    this.ctx.textBaseline = 'top'
+    this.ctx.font = `${fontSize}px ${fontWeight} ${fontFamily}`
+    this.ctx.fillStyle = fontColor
+    this.ctx.textAlign = textAlign
+    this.ctx.fillText(text, tickLineLength + 2, labelY)
+  }
+
+  updateLabels (label, pos) {
+    this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
+    this.ctx.save()
+
+    this.drawBorder()
+    const { locate } = this.config
+    if (locate === 'top' || locate === 'bottom') {
+      this.drawXLine()
+      this.drawTicks(this.genXPoints(this.xTicks))
+      this.drawText(this.genTextPoints(this.xTicks))
+      this.drawXLabel(label.x, pos.x)
+    }
+
+    if (this.config.locate === 'left' || this.config.locate === 'right') {
+      this.drawYLine()
+      this.drawTicks(this.genYPoints(this.yTicks))
+      this.drawYText(this.genYTextPoints(this.yTicks))
+      this.drawYLabel(label.y, pos.y)
+    }
+
+    this.ctx.restore()
   }
 
   draw () {
