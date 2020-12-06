@@ -64,7 +64,37 @@ export default class Axis extends Base {
 
     yTicks = tickY.getTicks(this.minVal, this.maxVal, count)
 
-    return yTicks
+    yTicks.sort((a, b) => (parseFloat(a) > parseFloat(b) ? -1 : 1))
+
+    const minInterval = this.config.style.textSize * 1.5
+    let adjTicks = []
+
+    if (yTicks) {
+      for (let i = 0; i < yTicks.length; i += 1) {
+        const tick = yTicks[i]
+        let toPrevious = null
+
+        if (adjTicks.length === 0) {
+          toPrevious = this.config.coordinate.bottom - this.yScale(tick)
+        } else {
+          toPrevious = this.yScale(adjTicks.slice(-1)[0]) - this.yScale(tick)
+        }
+
+        if (toPrevious < minInterval) {
+          continue
+        }
+        adjTicks.push(tick)
+      }
+
+      if (adjTicks.length) {
+        const toTop = this.yScale(adjTicks.slice(-1)[0]) - this.config.coordinate.top
+        if (toTop < minInterval) {
+          adjTicks = adjTicks.slice(0, -1)
+        }
+      }
+    }
+
+    return adjTicks
   }
 
   genXPoints (xTicks) {
@@ -370,7 +400,7 @@ export default class Axis extends Base {
     const [top, right, bottom, left] = this.config.label.horizontal.padding
 
     const format = (v) => {
-      return v.toFixed(4)
+      return v < 1000 ? v.toFixed(3) : parseInt(v, 10)
     }
 
     const text = format(label)
@@ -378,8 +408,8 @@ export default class Axis extends Base {
 
     if (labelY < axisTop + top + borderWidth) {
       labelY = axisTop + top + borderWidth
-    } else if (labelY > axisBottom - bottom - borderWidth) {
-      labelY = axisBottom - bottom - borderWidth
+    } else if (labelY > axisBottom - bottom - borderWidth - fontSize) {
+      labelY = axisBottom - bottom - borderWidth - fontSize
     }
 
     const rectTop = labelY - top - borderWidth

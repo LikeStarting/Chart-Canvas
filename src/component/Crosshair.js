@@ -91,14 +91,15 @@ class Crosshair extends Base {
   }
 
   getLinePoints (pos) {
+    const correct = this.ctx.lineWidth % 2 === 0 ? 0 : 0.5
     return [
       {
-        start: { x: this.config.coordinate.left, y: pos.y },
-        end: { x: this.config.coordinate.right, y: pos.y }
+        start: { x: this.config.coordinate.left, y: pos.y + correct },
+        end: { x: this.config.coordinate.right, y: pos.y + correct }
       },
       {
-        start: { x: pos.x, y: this.config.coordinate.top },
-        end: { x: pos.x, y: this.config.coordinate.bottom }
+        start: { x: pos.x + correct, y: this.config.coordinate.top },
+        end: { x: pos.x + correct, y: this.config.coordinate.bottom }
       }
     ]
   }
@@ -107,7 +108,9 @@ class Crosshair extends Base {
     const { lineColor, lineWidth, dashArray } = this.config.style
     this.ctx.strokeStyle = lineColor
     this.ctx.lineWidth = lineWidth
-    this.ctx.setLineDash(dashArray)
+    if (dashArray) {
+      this.ctx.setLineDash(dashArray)
+    }
 
     const points = this.getLinePoints(pos)
 

@@ -51,7 +51,36 @@ class Grid extends Base {
 
     hTicks = tickY.getTicks(this.minVal, this.maxVal, count)
 
-    return hTicks
+    hTicks.sort((a, b) => (parseFloat(a) > parseFloat(b) ? -1 : 1))
+    const minInterval = this.config.horizontal.labelSize * 1.5
+
+    let adjTicks = []
+    if (hTicks) {
+      for (let i = 0; i < hTicks.length; i += 1) {
+        const tick = hTicks[i]
+        let toPrevious = null
+
+        if (adjTicks.length === 0) {
+          toPrevious = this.config.coordinate.bottom - this.yScale(tick)
+        } else {
+          toPrevious = this.yScale(adjTicks.slice(-1)[0]) - this.yScale(tick)
+        }
+
+        if (toPrevious < minInterval) {
+          continue
+        }
+        adjTicks.push(tick)
+      }
+
+      if (adjTicks.length) {
+        const toTop = this.yScale(adjTicks.slice(-1)[0]) - this.config.coordinate.top
+        if (toTop < minInterval) {
+          adjTicks = adjTicks.slice(0, -1)
+        }
+      }
+    }
+
+    return adjTicks
   }
 
   getVerticalPoints (vTicks) {

@@ -3,7 +3,7 @@ import prices from './data/daily'
 import Chart from '../chart'
 
 const priceScaleType = 'linear'
-const volumeScaleType = 'pow'
+const volumeScaleType = 'log'
 
 const widthPrice = 300
 const heightPrice = 500
@@ -61,7 +61,7 @@ const options = {
       top: 0,
       bottom: 0,
       left: 0,
-      right: 40
+      right: 60
     }
   },
   components: [
@@ -158,8 +158,8 @@ const options = {
       locate: 'right',
       tickIntervalY: 30,
       position: {
-        left: width - 40,
-        width: 40,
+        left: width - 60,
+        width: 60,
         height: heightPrice
       },
       yScale: {
@@ -167,6 +167,11 @@ const options = {
       },
       style: {
         tickLineLength: 5
+      },
+      label: {
+        horizontal: {
+          backgroundColor: 'rgba(255, 165, 0, 0.8)'
+        }
       }
     },
     {
@@ -175,8 +180,8 @@ const options = {
       locate: 'right',
       tickIntervalY: 30,
       position: {
-        left: width - 40,
-        width: 40,
+        left: width - 60,
+        width: 60,
         top: heightPrice,
         height: heightVolume
       },
@@ -186,6 +191,11 @@ const options = {
       },
       style: {
         tickLineLength: 5
+      },
+      label: {
+        horizontal: {
+          backgroundColor: 'rgba(255, 165, 0, 0.8)'
+        }
       }
     },
     {
@@ -201,8 +211,8 @@ const options = {
         height: heightVolume
       },
       style: {
-        upColor: 'rgb(39, 54, 233)',
-        downColor: 'rgb(222, 50, 174)'
+        upColor: '#ff4500',
+        downColor: '#228b22'
       }
     },
     {
@@ -215,8 +225,8 @@ const options = {
         height: heightPrice
       },
       style: {
-        upColor: 'rgb(39, 54, 233)',
-        downColor: 'rgb(222, 50, 174)',
+        upColor: '#ff4500',
+        downColor: '#228b22',
         tickBarWidth: 4,
         lineWidth: 2
       }
@@ -224,8 +234,8 @@ const options = {
     {
       type: 'crosshair',
       style: {
-        lineColor: 'rgb(39, 54, 233)'
-        // lineStyle: 'no-cursor',
+        // lineColor: 'rgb(39, 54, 233)'
+        dashArray: 0
       },
       position: {
         height: heightPrice + heightVolume,

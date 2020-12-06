@@ -13,7 +13,7 @@ class CrosshairConfig extends BaseConfig {
     return {
       lineColor: style.lineColor || 'black',
       lineWidth: style.lineWidth || 1,
-      dashArray: style.dashArray === 0 ? 0 : style.dashArray || [2, 2],
+      dashArray: style.dashArray === 0 ? [0, 0] : style.dashArray || [2, 2],
       tooltipOpacity: style.tooltipOpacity || 0.7,
       tooltipOffsetX: style.tooltipOffsetX || 5,
       tooltipOffsetY: style.tooltipOffsetY || 5
@@ -43,19 +43,25 @@ class CrosshairConfig extends BaseConfig {
           #crosshair-tooltip div {
             font-size: 0;
           }
-          #crosshair-tooltip div span {
+          #crosshair-tooltip div > span {
             display: inline-block;
             padding: 0 5px;
             font-size: 11px;
             color: grey;
           }
-          #crosshair-tooltip div span:first-child {
+          #crosshair-tooltip div > span:first-child {
             width: 40px;
             text-align: right;
           }
-          #crosshair-tooltip div span:last-child {
+          #crosshair-tooltip div > span:last-child {
             padding-right: 0;
             width: 110px
+          }
+          #crosshair-tooltip div span span.up {
+            color: rgb(39, 54, 233);
+          }
+          #crosshair-tooltip div span span.down {
+            color: rgb(222, 50, 174);
           }
         </style>
       `
@@ -80,7 +86,10 @@ class CrosshairConfig extends BaseConfig {
           </div>
           <div>
             <span>Last:</span>
-            <span>${price.close}</span>
+            <span>
+              ${price.close}
+              <span class="${price.close > 0 ? 'up' : 'down'}">(${price.chg > 0 ? '+' : ''}${price.chg.toFixed(2)})</span>
+            </span>
           </div>
           <div>
             <span>Volume:</span>

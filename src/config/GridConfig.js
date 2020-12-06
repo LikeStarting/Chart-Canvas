@@ -20,7 +20,7 @@ class GridConfig extends BaseConfig {
     return {
       interval: TimeInterval[vConfig.interval],
       display: vConfig.display !== false,
-      dashArray: vConfig.dashArray === 0 ? 0 : vConfig.dashArray || [2, 2],
+      dashArray: vConfig.dashArray === 0 ? [0, 0] : vConfig.dashArray || [2, 2],
       lineWidth: vConfig.lineWidth || 1,
       lineColor: vConfig.lineColor || 'lightgray'
     }
@@ -32,9 +32,10 @@ class GridConfig extends BaseConfig {
     return {
       interval: hConfig.interval || 30,
       display: hConfig.display !== false,
-      dashArray: hConfig.dashArray === 0 ? 0 : hConfig.dashArray || [2, 2],
+      dashArray: hConfig.dashArray === 0 ? [0, 0] : hConfig.dashArray || [2, 2],
       lineWidth: hConfig.lineWidth || 1,
       lineColor: hConfig.lineColor || 'lightgray',
+      labelSize: hConfig.labelSize || 10,
       margin: {
         top: margin.top || 0,
         bottom: margin.bottom || 0
