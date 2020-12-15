@@ -46,7 +46,7 @@ class Crosshair extends Base {
       this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
       return
     }
-
+    console.log('hoverDate=====', hoverDate)
     if (!hoverDate) return
     this.chart.chartContainer.style.cursor = 'crosshair'
     const adjustValue = this.xScale(hoverDate) + this.transform.x
@@ -181,8 +181,11 @@ class Crosshair extends Base {
     this.drawTooltip()
   }
 
-  update (x) {
-    this.transform.x = x
+  update (offsetX) {
+    if (offsetX !== undefined) {
+      this.transform.x = offsetX
+    }
+    console.log('-----', offsetX)
     this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
     this.chart.chartContainer.style.cursor = 'pointer'
   }

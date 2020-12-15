@@ -85,6 +85,7 @@ class Event {
     if (x < this.minOffsetX || x > this.maxOffsetX) return
 
     this.offsetX = offsetX
+    this.transfrom.x = x
 
     this.updateData(x).then(d => {
       this.components.forEach(c => {

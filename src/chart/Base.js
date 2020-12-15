@@ -7,6 +7,12 @@ class ChartBase {
   constructor (data, options) {
     this._data = new DataConfig(data)
     this.options = options
+
+    this._destroyed = false
+    this.transfrom = {
+      x: 0
+    }
+
     this.initContainer()
     this.initEvent()
     this.updateData().then(() => {
@@ -57,13 +63,37 @@ class ChartBase {
   }
 
   draw () {
+    if (this._destroyed) return
+
     this.components.forEach(c => {
       c.draw()
     })
   }
 
+  update (x) {
+    if (this._destroyed) return
+
+    this.components.forEach(c => {
+      c.update(x)
+    })
+  }
+
+  redraw (x) {
+    if (this._destroyed) return
+
+    if (x) this.x = x
+    const offsetX = x || this.transfrom.x
+
+    this.updateData(offsetX).then(d => {
+      this.update(x)
+    })
+  }
+
   destroy () {
-    this.container.remove()
+    this.container.parentNode.removeChild(this.container)
+    this.chartContainer.parentNode.removeChild(this.chartContainer)
+
+    this._destroyed = true
   }
 }
 
