@@ -482,7 +482,9 @@ export default class Axis extends Base {
   }
 
   update (offsetX) {
-    this.transform.x = offsetX
+    if (offsetX !== undefined) {
+      this.transform.x = offsetX
+    }
 
     this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
 

@@ -163,7 +163,9 @@ class Grid extends Base {
   }
 
   update (offsetX) {
-    this.transfrom.x = offsetX
+    if (offsetX !== undefined) {
+      this.transfrom.x = offsetX
+    }
 
     this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight)
     this.updateData()
